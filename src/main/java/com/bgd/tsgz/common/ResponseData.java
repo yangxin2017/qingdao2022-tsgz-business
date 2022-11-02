@@ -10,7 +10,7 @@ public class ResponseData<T> {
 
     public ResponseData() {
         this.code = 200;
-        this.message = "";
+        this.message = "查询成功！";
         this.result =  null;
     }
 
@@ -29,6 +29,13 @@ public class ResponseData<T> {
     public static ResponseData NOAUTH() {
         ResponseData rd = new ResponseData();
         rd.setCode(401);
+        return rd;
+    }
+
+    public static ResponseData ERROR(Integer code,String msg) {
+        ResponseData rd = new ResponseData();
+        rd.setCode(code);
+        rd.setMessage(msg);
         return rd;
     }
 }

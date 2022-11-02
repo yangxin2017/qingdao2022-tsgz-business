@@ -20,7 +20,7 @@ public class ViewLightController {
     @Autowired
     private ViewLightService viewLightService;
 
-    @GetMapping("add")
+   /* @GetMapping("add")
     @ApiOperation(value = "测试添加", notes = "测试添加")
     public ResponseData<ViewLight> AddData() {
         ViewLight v = new ViewLight();
@@ -35,7 +35,7 @@ public class ViewLightController {
         v.setSignalid("9");
         viewLightService.save(v);
         return ResponseData.OK(v);
-    }
+    }*/
 
     // getLightList，接收name参数
     @GetMapping("getLightList")
