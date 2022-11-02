@@ -1,5 +1,6 @@
 package com.bgd.tsgz.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewLight;
 import com.bgd.tsgz.service.ViewLightService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static com.bgd.tsgz.common.ResponseData.OK;
 
 @RestController
-@RequestMapping("light")
+@RequestMapping("")
 @Api(value = "信号灯", tags = {"信号灯"})
 public class ViewLightController {
     @Autowired
@@ -34,5 +35,16 @@ public class ViewLightController {
         v.setSignalid("9");
         viewLightService.save(v);
         return ResponseData.OK(v);
+    }
+
+    // getLightList，接收name参数
+    @GetMapping("getLightList")
+    @ApiOperation(value = "获取信号灯列表", notes = "获取信号灯列表")
+    public ResponseData<ViewLight> getLightList(String name) {
+        QueryWrapper<ViewLight> queryWrapper = new QueryWrapper<>();
+        if(name != null && !name.equals("")){
+            queryWrapper.like("name", name);
+        }
+        return OK(viewLightService.list(queryWrapper));
     }
 }
