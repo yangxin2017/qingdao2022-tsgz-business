@@ -41,6 +41,7 @@ public class ViewSectionController {
             json.put("name", viewSection.getName());
             json.put("threshold", viewSection.getThreshold());
             json.put("gis", gis);
+            json.put("type", viewSection.getType());
             jsonArray.add(json);
         }
 

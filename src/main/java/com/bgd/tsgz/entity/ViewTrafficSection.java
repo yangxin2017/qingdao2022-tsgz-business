@@ -1,7 +1,5 @@
 package com.bgd.tsgz.entity;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -11,19 +9,19 @@ import lombok.Data;
 
 
 @Data
-@TableName("view_section")
-@ApiModel("重点路段")
-public class ViewSection {
+@TableName("view_traffic_section")
+@ApiModel("道路排名")
+public class ViewTrafficSection {
     @TableId(type= IdType.AUTO)
     @ApiModelProperty("主键")
     private Integer id;
 
     @ApiModelProperty("名称")
     private String name;
-    @ApiModelProperty("阈值")
-    private String threshold;
-    @ApiModelProperty("gis")
-    private String gis;
-    @ApiModelProperty("类型")
-    private String type;
+
+    @ApiModelProperty("指标值")
+    private Integer value;
+
+    @ApiModelProperty("时间")
+    private String createtime;
 }

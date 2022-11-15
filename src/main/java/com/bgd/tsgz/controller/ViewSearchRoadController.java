@@ -43,7 +43,18 @@ public class ViewSearchRoadController {
             viewRegionQueryWrapper.like("name", name);
         }
         JSONArray jsonArray = new JSONArray();
-        jsonArray.addAll(viewIntersectionService.list(viewIntersectionQueryWrapper));
+
+        JSONArray viewIntersectionArray = new JSONArray();
+        for(ViewIntersection viewIntersection : viewIntersectionService.list(viewIntersectionQueryWrapper)){
+            JSONObject json = new JSONObject();
+            json.put("id", viewIntersection.getId());
+            json.put("name", viewIntersection.getName());
+            json.put("lng", viewIntersection.getLng());
+            json.put("lat", viewIntersection.getLat());
+            json.put("typeId", "1");
+            viewIntersectionArray.add(json);
+        }
+        jsonArray.addAll(viewIntersectionArray);
 
         JSONArray viewSectionArray = new JSONArray();
         for(ViewSection viewSection : viewSectionService.list(viewSectionQueryWrapper)){
@@ -53,6 +64,7 @@ public class ViewSearchRoadController {
             json.put("name", viewSection.getName());
             json.put("threshold", viewSection.getThreshold());
             json.put("gis", gis);
+            json.put("typeId", "2");
             viewSectionArray.add(json);
         }
         jsonArray.addAll(viewSectionArray);
@@ -65,6 +77,7 @@ public class ViewSearchRoadController {
             json.put("name", viewRegion.getName());
             json.put("threshold", viewRegion.getThreshold());
             json.put("gis", gis);
+            json.put("typeId", "3");
             viewRegionArray.add(json);
         }
         jsonArray.addAll(viewRegionArray);
