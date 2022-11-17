@@ -1,5 +1,6 @@
 package com.bgd.tsgz.controller;
 
+import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.bgd.tsgz.common.ResponseData.OK;
 
 @RestController
@@ -24,7 +28,11 @@ public class ViewTrafficController {
 
     @GetMapping("getTrafficList")
     @ApiOperation(value = "获取交通路况列表", notes = "获取交通路况列表")
-    public ResponseData<ViewTraffic> getTrafficList(String name) {
+    public ResponseData getTrafficList() {
+        List list = viewTrafficService.getTrafficApiList();
+        return OK(list);
+    }
+    /*public ResponseData<ViewTraffic> getTrafficList(String name) {
         QueryWrapper<ViewTraffic> queryWrapper = new QueryWrapper<>();
         if(name != null && !name.equals("")){
             queryWrapper.like("name", name);
@@ -45,5 +53,5 @@ public class ViewTrafficController {
         }
 
         return OK(jsonArray);
-    }
+    }*/
 }

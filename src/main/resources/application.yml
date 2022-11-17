@@ -1,0 +1,36 @@
+server:
+  port: 8077
+  servlet:
+    context-path: /tsgz
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+log4j:
+  rootLogger: DEBUG,console
+  appender:
+    console:
+      name: console
+      class: org.apache.log4j.ConsoleAppender
+      layout:
+        class: org.apache.log4j.PatternLayout
+        conversionPattern: "[%-d{yyyy-MM-dd HH:mm:ss}]-[%t-%5p]-[%C-%M(%L)] %m%n"
+
+dbconfig:
+  maindb:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://10.16.7.14:8003/tsgz
+    username: tsgz
+    password: tsgz
+  hidb:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://10.16.7.14:8003/hidata
+    username: hidata
+    password: 2022@hidata
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case=false: false
