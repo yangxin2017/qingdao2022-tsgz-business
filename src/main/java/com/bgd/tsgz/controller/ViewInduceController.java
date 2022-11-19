@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.common.ResponseData;
+import com.bgd.tsgz.entity.BisDevice;
 import com.bgd.tsgz.entity.ViewInduce;
+import com.bgd.tsgz.service.BisDeviceService;
 import com.bgd.tsgz.service.ViewInduceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,12 +23,35 @@ import static com.bgd.tsgz.common.ResponseData.OK;
 public class ViewInduceController {
     @Autowired
     private ViewInduceService viewInduceService;
+    @Autowired
+    private BisDeviceService bisDeviceService;
 
     @GetMapping("getInduceList")
     @ApiOperation(value = "获取诱导列表", notes = "获取诱导列表")
     public ResponseData<ViewInduce> getInduceList() {
-        QueryWrapper<ViewInduce> queryWrapper = new QueryWrapper<>();
+//        QueryWrapper<ViewInduce> queryWrapper = new QueryWrapper<>();
+//
+//        return OK(viewInduceService.list(queryWrapper));
+        JSONArray jsonArray = new JSONArray();
 
-        return OK(viewInduceService.list(queryWrapper));
+        QueryWrapper<BisDevice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("devicetype_id", "451");
+        for (BisDevice bisDevice : bisDeviceService.list(queryWrapper)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("lng", bisDevice.getLongitude());
+            jsonObject.put("lat", bisDevice.getLatitude());
+            jsonObject.put("name", bisDevice.getDeviceName());
+            jsonObject.put("department", bisDevice.getDeviceCode());
+            jsonObject.put("address", bisDevice.getDevicePort());
+            jsonObject.put("installDate", bisDevice.getInstallDate());
+            jsonObject.put("thirdNumber", bisDevice.getThirdsyscode());
+            jsonObject.put("status", bisDevice.getDeviceStatus());
+            jsonObject.put("type", bisDevice.getModel());
+            jsonObject.put("id", bisDevice.getDeviceCode());
+
+            jsonArray.add(jsonObject);
+        }
+
+        return OK(jsonArray);
     }
 }

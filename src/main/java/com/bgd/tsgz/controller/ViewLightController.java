@@ -1,8 +1,12 @@
 package com.bgd.tsgz.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.common.ResponseData;
+import com.bgd.tsgz.entity.BisDevice;
 import com.bgd.tsgz.entity.ViewLight;
+import com.bgd.tsgz.service.BisDeviceService;
 import com.bgd.tsgz.service.ViewLightService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,6 +23,8 @@ import static com.bgd.tsgz.common.ResponseData.OK;
 public class ViewLightController {
     @Autowired
     private ViewLightService viewLightService;
+    @Autowired
+    private BisDeviceService bisDeviceService;
 
    /* @GetMapping("add")
     @ApiOperation(value = "测试添加", notes = "测试添加")
@@ -41,10 +47,30 @@ public class ViewLightController {
     @GetMapping("getLightList")
     @ApiOperation(value = "获取信号灯列表", notes = "获取信号灯列表")
     public ResponseData<ViewLight> getLightList(String name) {
-        QueryWrapper<ViewLight> queryWrapper = new QueryWrapper<>();
-        if(name != null && !name.equals("")){
-            queryWrapper.like("name", name);
+//        QueryWrapper<ViewLight> queryWrapper = new QueryWrapper<>();
+//        if(name != null && !name.equals("")){
+//            queryWrapper.like("name", name);
+//        }
+//        return OK(viewLightService.list(queryWrapper));
+        JSONArray jsonArray = new JSONArray();
+
+        QueryWrapper<BisDevice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("devicetype_id", "451");
+        for (BisDevice bisDevice : bisDeviceService.list(queryWrapper)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("lng", bisDevice.getLongitude());
+            jsonObject.put("lat", bisDevice.getLatitude());
+            jsonObject.put("name", bisDevice.getDeviceName());
+            jsonObject.put("model", bisDevice.getModel());
+            jsonObject.put("department", bisDevice.getDeviceCode());
+            jsonObject.put("address", bisDevice.getDevicePort());
+            jsonObject.put("installDate", bisDevice.getInstallDate());
+            jsonObject.put("thirdNumber", bisDevice.getThirdsyscode());
+            jsonObject.put("status", bisDevice.getDeviceStatus());
+            jsonObject.put("id", bisDevice.getDeviceCode());
+            jsonArray.add(jsonObject);
         }
-        return OK(viewLightService.list(queryWrapper));
+
+        return OK(jsonArray);
     }
 }

@@ -35,15 +35,27 @@ public class DriveServiceImpl implements DriveService {
     }
 
     @Override
-    public JSONArray getDriveIn24Hour() {
+    public JSONObject getDriveIn24Hour() {
+        JSONObject jsonObject = new JSONObject();
         JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", 0,"tsgz","area","inflow",new JSONArray(),"",true);
-        return data;
+        jsonObject.put("nowData", data);
+
+        data = getData("/data-server/indices/getPeriodMeasureRet", 7,"tsgz","area","inflow",new JSONArray(),"",true);
+        jsonObject.put("lastData", data);
+
+        return jsonObject;
     }
 
     @Override
-    public JSONArray getDriveOut24Hour() {
+    public JSONObject getDriveOut24Hour() {
+        JSONObject jsonObject = new JSONObject();
         JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", 0,"tsgz","area","outflow",new JSONArray(),"",true);
-        return data;
+        jsonObject.put("nowData", data);
+
+        data = getData("/data-server/indices/getPeriodMeasureRet", 7,"tsgz","area","outflow",new JSONArray(),"",true);
+        jsonObject.put("lastData", data);
+
+        return jsonObject;
     }
 
     @Override

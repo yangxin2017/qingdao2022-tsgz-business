@@ -38,6 +38,7 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
         JSONObject resultJson = JSONObject.parseObject(result);
         JSONArray data = resultJson.getJSONArray("result");
         ArrayList list = new ArrayList<>();
+
         QueryWrapper<BisSection> queryWrapper = new QueryWrapper<>();
         List<BisSection> bisSectionList = bisSectionService.list(queryWrapper);
         for(int i = 0; i < data.size(); i++){
@@ -68,6 +69,7 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
                 }
             }
         }
+
         return list;
     }
 }

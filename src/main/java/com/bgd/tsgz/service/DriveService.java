@@ -11,10 +11,10 @@ public interface DriveService {
     public JSONObject getDriveOutCycle();
 
     // 24小时驶入车辆变化趋势
-    public JSONArray getDriveIn24Hour();
+    public JSONObject getDriveIn24Hour();
 
     // 24小时驶出车辆变化趋势
-    public JSONArray getDriveOut24Hour();
+    public JSONObject getDriveOut24Hour();
 
     // 拥堵指数
     public JSONObject getCongestionIndex();

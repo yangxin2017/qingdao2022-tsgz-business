@@ -40,7 +40,7 @@ public class AcdFile {
     private String ms;
     @ApiModelProperty("起点米数")
     private String qdms;
-    @ApiModelProperty("街道位置")
+    @ApiModelProperty("绝对位置")
     private String jdwz;
     @ApiModelProperty("事故地点")
     private String sgdd;

@@ -1,5 +1,7 @@
 package com.bgd.tsgz.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.AcdFile;
@@ -46,6 +48,15 @@ public class AcdfileController {
         Date dates = simpleDateFormat.parse(dateStr);
         queryWrapper.eq("sgfssj", dates);
 
-        return OK(AcdFileService.list(queryWrapper));
+        JSONArray jsonArray = new JSONArray();
+        for (AcdFile acdFile : AcdFileService.list(queryWrapper)) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("sglx", acdFile.getSglx());
+            jsonObject.put("sgdd", acdFile.getSgdd());
+            jsonObject.put("jdwz", acdFile.getJdwz());
+            jsonArray.add(jsonObject);
+        }
+
+        return OK(jsonArray);
     }
 }
