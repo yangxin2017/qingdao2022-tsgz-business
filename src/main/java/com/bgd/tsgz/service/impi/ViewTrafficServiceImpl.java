@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.bgd.tsgz.entity.BisRoad;
 import com.bgd.tsgz.entity.BisSection;
 import com.bgd.tsgz.entity.ViewTraffic;
 import com.bgd.tsgz.mapper.ViewTrafficMapper;
+import com.bgd.tsgz.service.BisRoadService;
 import com.bgd.tsgz.service.BisSectionService;
 import com.bgd.tsgz.service.ViewTrafficService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,18 @@ import java.util.List;
 public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewTraffic> implements ViewTrafficService {
     @Autowired
     BisSectionService bisSectionService;
+
+    @Autowired
+    BisRoadService roadService;
+
     @Override
     public ArrayList getTrafficApiList() {
         String url = "http://10.16.7.14:8005/data-server/indices/getIndices";
         JSONObject params = new JSONObject();
         params.put("token", "tsgz");
         params.put("geoDim","section");
-        String starttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 20 * 60 * 1000));
-        String endttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 15 * 60 * 1000));
+        String starttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 20 * 60 * 1000 - 3*24*60*60*1000));
+        String endttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 15 * 60 * 1000 - 3*24*60*60*1000));
         params.put("startTime", starttime);
         params.put("endTime", endttime);
         JSONArray columns = new JSONArray();
@@ -38,6 +44,8 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
         JSONObject resultJson = JSONObject.parseObject(result);
         JSONArray data = resultJson.getJSONArray("result");
         ArrayList list = new ArrayList<>();
+
+        List<BisRoad> allRoads = roadService.list();
 
         QueryWrapper<BisSection> queryWrapper = new QueryWrapper<>();
         List<BisSection> bisSectionList = bisSectionService.list(queryWrapper);
@@ -59,11 +67,13 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
                             positionItem.put("lat", positionArray[j+1]);
                             position.add(positionItem);
                         }
-                        json.put("gis", position);
-                        json.put("value", item.getString("tpibynet"));
-                        json.put("id", bisSection.getSectionCode());
-                        json.put("width", bisSection.getWidth());
-                        list.add(json);
+                        if(isImpRoad(bisSection.getRoadCode(), allRoads)) {
+                            json.put("gis", position);
+                            json.put("value", item.getString("tpibynet"));
+                            json.put("id", bisSection.getSectionCode());
+                            json.put("width", bisSection.getWidth());
+                            list.add(json);
+                        }
                         break;
                     }
                 }
@@ -71,5 +81,26 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
         }
 
         return list;
+    }
+
+    private boolean isImpRoad(String roadCode, List<BisRoad> allRoads) {
+        List<Integer> impTypes = new ArrayList<>();
+        impTypes.add(1);
+        impTypes.add(2);
+        impTypes.add(3);
+        impTypes.add(4);
+        impTypes.add(8);
+        impTypes.add(9);
+
+        boolean isImp = false;
+        for(BisRoad road: allRoads) {
+            if (road.getRoadCode().equals(roadCode)) {
+                if (impTypes.contains(road.getRoadType())) {
+                    isImp = true;
+                    break;
+                }
+            }
+        }
+        return isImp;
     }
 }
