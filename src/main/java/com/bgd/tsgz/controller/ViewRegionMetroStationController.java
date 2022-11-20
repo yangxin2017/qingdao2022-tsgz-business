@@ -1,8 +1,12 @@
 package com.bgd.tsgz.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.common.ResponseData;
+import com.bgd.tsgz.entity.PoiSubway;
 import com.bgd.tsgz.entity.ViewRegionMetroStation;
+import com.bgd.tsgz.service.PoiSubwayService;
 import com.bgd.tsgz.service.ViewRegionMetroStationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,12 +23,27 @@ import static com.bgd.tsgz.common.ResponseData.OK;
 public class ViewRegionMetroStationController {
     @Autowired
     private ViewRegionMetroStationService viewRegionMetroStationService;
+    @Autowired
+    private PoiSubwayService poiSubwayService;
 
     @GetMapping("getRegionMetroStationList")
     @ApiOperation(value = "获取地铁站点列表", notes = "获取地铁站点列表")
-    public ResponseData<ViewRegionMetroStation> getRegionMetroStationList() {
-        QueryWrapper<ViewRegionMetroStation> queryWrapper = new QueryWrapper<>();
+    public ResponseData getRegionMetroStationList() {
+//        QueryWrapper<ViewRegionMetroStation> queryWrapper = new QueryWrapper<>();
+//
+//        return OK(viewRegionMetroStationService.list(queryWrapper));
+        QueryWrapper<PoiSubway> queryWrapper = new QueryWrapper<>();
+        JSONArray jsonArray = new JSONArray();
+        for(PoiSubway poiSubway : poiSubwayService.list(queryWrapper)){
+            JSONObject json = new JSONObject();
+            json.put("id", poiSubway.getPid());
+            json.put("name", poiSubway.getName());
+            json.put("lng", poiSubway.getDisplayX());
+            json.put("lat", poiSubway.getDisplayY());
 
-        return OK(viewRegionMetroStationService.list(queryWrapper));
+            jsonArray.add(json);
+        }
+
+        return OK(jsonArray);
     }
 }

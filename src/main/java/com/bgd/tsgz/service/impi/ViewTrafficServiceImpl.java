@@ -77,6 +77,7 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
                                 json.put("value", item.getString("tpibynet"));
                                 json.put("id", bisSection.getSectionCode());
                                 json.put("width", bisSection.getWidth());
+//                                json.put("height",0);
                                 list.add(json);
                             }
                         }
