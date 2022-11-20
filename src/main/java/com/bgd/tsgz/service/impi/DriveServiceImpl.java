@@ -3,11 +3,20 @@ package com.bgd.tsgz.service.impi;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.entity.BisSection;
+import com.bgd.tsgz.service.BisSectionService;
 import com.bgd.tsgz.service.DriveService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class DriveServiceImpl implements DriveService {
+    @Autowired
+    private BisSectionService bisSectionService;
     @Override
     public JSONObject getDriveInCycle() {
         JSONObject jsonObject = new JSONObject();
@@ -102,16 +111,55 @@ public class DriveServiceImpl implements DriveService {
         JSONObject jsonObject = new JSONObject();
         JSONArray param = new JSONArray();
         param.add("tpi");
+        param.add("areacode");
 
         JSONArray data = getData("/data-server/indices/getIndices", 0,"tsgz","area","",param,"1h",60,0,"tpi");
         jsonObject.put("tpi", data);
 
         param.clear();
         param.add("speed");
+        param.add("areacode");
         data = getData("/data-server/indices/getIndices", 0,"tsgz","area","",param,"1h",60,0,"speed");
         jsonObject.put("speed", data);
 
         return jsonObject;
+    }
+
+    @Override
+    public JSONArray getSectionFlow() {
+        JSONArray param = new JSONArray();
+        param.add("flow");
+        param.add("sectioncode");
+
+        JSONArray data = getData("/data-server/indices/getIndices", 1,"tsgz","section","",param,"",20,15,"flow");
+        ArrayList codeList = new ArrayList();
+        for(int i = 0; i < data.size(); i++){
+            JSONObject jsonObject = data.getJSONObject(i);
+            if(jsonObject.get("flow") == null){
+                continue;
+            }
+            codeList.add(data.getJSONObject(i).getString("sectioncode"));
+        }
+        QueryWrapper<BisSection> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("section_code", codeList);
+        List<BisSection> bisSections = bisSectionService.list(queryWrapper);
+        JSONArray result = new JSONArray();
+
+        for (int i = 0; i < data.size(); i++) {
+            JSONObject jsonObject = data.getJSONObject(i);
+            // 判断flow是否为null
+            if(jsonObject.get("flow") == null){
+                continue;
+            }
+            for (BisSection bisSection : bisSections) {
+                if (bisSection.getSectionCode().equals(jsonObject.getString("sectioncode"))) {
+                    jsonObject.put("name", bisSection.getSectionName());
+                    result.add(jsonObject);
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
 

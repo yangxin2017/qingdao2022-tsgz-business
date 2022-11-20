@@ -27,4 +27,7 @@ public interface DriveService {
 
     // 指数和速度排名
     public JSONObject getRank();
+
+    // 流量排名
+    public JSONArray getSectionFlow();
 }
