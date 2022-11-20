@@ -57,7 +57,6 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
                 for(BisSection bisSection : bisSectionList){
                     // sectioncode!=null并且bisSection.getSection_code()不为null
                     if(bisSection.getSectionCode().equals(sectioncode)){
-                        json.put("name", bisSection.getSectionName());
                         JSONArray position = new JSONArray();
                         // 将position以逗号分割，单位数为lng，双位数为lat，两个一组存入position
                         String[] positionArray = bisSection.getPosition().split(",");
@@ -68,11 +67,18 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
                             position.add(positionItem);
                         }
                         if(isImpRoad(bisSection.getRoadCode(), allRoads)) {
-                            json.put("gis", position);
-                            json.put("value", item.getString("tpibynet"));
-                            json.put("id", bisSection.getSectionCode());
-                            json.put("width", bisSection.getWidth());
-                            list.add(json);
+                            for (int j=0;j<position.size()-1;j++) {
+                                JSONArray arr = new JSONArray();
+                                arr.add(position.getJSONObject(j));
+                                arr.add(position.getJSONObject(j + 1));
+
+                                json.put("name", bisSection.getSectionName());
+                                json.put("gis", arr);
+                                json.put("value", item.getString("tpibynet"));
+                                json.put("id", bisSection.getSectionCode());
+                                json.put("width", bisSection.getWidth());
+                                list.add(json);
+                            }
                         }
                         break;
                     }
