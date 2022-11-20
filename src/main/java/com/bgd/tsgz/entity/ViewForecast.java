@@ -13,21 +13,15 @@ import lombok.Data;
 @ApiModel("交通路况预测")
 public class ViewForecast {
     @TableId(type= IdType.AUTO)
-    @ApiModelProperty("主键")
-    private Integer id;
-
+    // gis, traffic_volum, "time", forecastid, section_code
     @ApiModelProperty("gis")
     private String gis;
-    @ApiModelProperty("阈值")
-    private String threshold;
-    @ApiModelProperty("名称")
-    private String name;
-    @ApiModelProperty("拥堵值")
-    private String value;
+    @ApiModelProperty("流量数据")
+    private String trafficVolum;
     @ApiModelProperty("时间")
     private String time;
     @ApiModelProperty("预测id")
     private String forecastid;
-    @ApiModelProperty("日期id")
-    private String dateid;
+    @ApiModelProperty("路段编码")
+    private String sectionCode;
 }

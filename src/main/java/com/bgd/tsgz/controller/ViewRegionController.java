@@ -30,22 +30,6 @@ public class ViewRegionController {
     @GetMapping("getRegionList")
     @ApiOperation(value = "获取重点区域列表", notes = "获取重点区域列表")
     public ResponseData<ViewRegion> getRegionList(String name) {
-//        QueryWrapper<ViewRegion> queryWrapper = new QueryWrapper<>();
-//        if(name != null && !name.equals("")){
-//            queryWrapper.like("name", name);
-//        }
-//        JSONArray jsonArray = new JSONArray();
-//        // gis为jsonarray字符串，转换为jsonarray
-//        for(ViewRegion viewRegion : viewRegionService.list(queryWrapper)){
-//            JSONObject json = new JSONObject();
-//            JSONArray gis = JSONArray.parseArray(viewRegion.getGis());
-//            json.put("id", viewRegion.getId());
-//            json.put("name", viewRegion.getName());
-//            json.put("threshold", viewRegion.getThreshold());
-//            json.put("gis", gis);
-//            jsonArray.add(json);
-//        }
-//        return OK(jsonArray);
         QueryWrapper<BisArea> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("area_type", "02");
         if(name != null && !name.equals("")){

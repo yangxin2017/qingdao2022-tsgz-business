@@ -31,11 +31,6 @@ public class ViewIntersectionController {
     @GetMapping("getIntersectionList")
     @ApiOperation(value = "获取重点路口列表", notes = "获取重点路口列表")
     public ResponseData<ViewIntersection> getIntersectionList(String name) {
-//        QueryWrapper<ViewIntersection> queryWrapper = new QueryWrapper<>();
-//        if(name != null && !name.equals("")){
-//            queryWrapper.like("name", name);
-//        }
-//        return OK(viewIntersectionService.list(queryWrapper));
         QueryWrapper<BisCrossing> queryWrapper = new QueryWrapper<>();
         ArrayList namelist = new ArrayList();
         namelist.add("香港西路与延安三路路口");
@@ -53,9 +48,6 @@ public class ViewIntersectionController {
 
         queryWrapper.in("crossing_name", namelist);
 
-//        if(name != null && !name.equals("")){
-//            queryWrapper.like("crossing_name", name);
-//        }
         JSONArray jsonArray = new JSONArray();
         for (BisCrossing bisCrossing : bisCrossingService.list(queryWrapper)) {
             JSONObject jsonObject = new JSONObject();
