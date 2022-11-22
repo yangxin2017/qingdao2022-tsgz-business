@@ -73,4 +73,13 @@ public class PanelRegionController {
     public ResponseData<AcdFile> getSectionFlow(){
         return OK(driveService.getSectionFlow());
     }
+
+    // 获取区域路段排名
+    @GetMapping("getSectionRank")
+    @ApiOperation(value = "获取区域路段排名", notes = "获取区域路段排名")
+    public ResponseData<AcdFile> getSectionRank(){
+        return OK(driveService.getSectionRank());
+    }
+
+
 }

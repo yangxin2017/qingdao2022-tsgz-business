@@ -15,10 +15,6 @@ public class ViewIntersection {
     @ApiModelProperty("主键")
     private Integer id;
 
-    @ApiModelProperty("经度")
-    private String lng;
-    @ApiModelProperty("纬度")
-    private String lat;
-    @ApiModelProperty("名称")
-    private String name;
+    @ApiModelProperty("路口code")
+    private String code;
 }

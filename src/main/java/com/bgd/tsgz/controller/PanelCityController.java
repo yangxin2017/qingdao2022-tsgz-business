@@ -79,4 +79,11 @@ public class PanelCityController {
         JSONArray result = panelCityService.getHighwayCongestionRanking();
         return OK(result);
     }
+
+    @GetMapping("getFocusRoadRanking")
+    @ApiOperation(value = "重点路段排名", notes = "重点路段排名")
+    public ResponseData<AcdFile> getFocusRoadRanking(){
+        JSONArray result = panelCityService.getFocusRoadRanking();
+        return OK(result);
+    }
 }

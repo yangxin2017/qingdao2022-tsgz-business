@@ -25,4 +25,7 @@ public interface PanelCityService {
     // 高速拥堵排名
     public JSONArray getHighwayCongestionRanking();
 
+    // 重点路段排名
+    public JSONArray getFocusRoadRanking();
+
 }

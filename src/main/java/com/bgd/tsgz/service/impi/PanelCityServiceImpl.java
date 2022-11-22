@@ -5,16 +5,26 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.entity.BisArea;
-import com.bgd.tsgz.service.BisAreaService;
-import com.bgd.tsgz.service.PanelCityService;
+import com.bgd.tsgz.entity.BisSection;
+import com.bgd.tsgz.entity.DimHiMainline;
+import com.bgd.tsgz.entity.ViewSection;
+import com.bgd.tsgz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class PanelCityServiceImpl implements PanelCityService {
 
     @Autowired
     private BisAreaService bisAreaService;
+    @Autowired
+    private BisSectionService bisSectionService;
+    @Autowired
+    private ViewSectionService viewSectionService;
+    @Autowired
+    private DimHiMainlineService dimHiMainlineService;
     // 获取实时TPI数据
     @Override
     public JSONObject getTpiList() {
@@ -74,7 +84,25 @@ public class PanelCityServiceImpl implements PanelCityService {
         params.add("areacode");
 
         JSONArray data = getData("/data-server/indices/getIndices", 0,"tsgz","area","",params,null,false, "tpi");
-        return data;
+        JSONArray result = new JSONArray();
+        ArrayList codeList = new ArrayList();
+        for (int i = 0; i < data.size(); i++) {
+            codeList.add(data.getJSONObject(i).getString("areacode"));
+        }
+        QueryWrapper<BisArea> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("area_code", codeList);
+        for (int i = 0; i < data.size(); i++) {
+            for (BisArea bisArea : bisAreaService.list(queryWrapper)) {
+                if (bisArea.getAreaCode().equals(data.getJSONObject(i).getString("areacode"))) {
+                    data.getJSONObject(i).put("name", bisArea.getAreaName());
+                    result.add(data.getJSONObject(i));
+                    if (result.size() > 10) {
+                        result.remove(0);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     // 重点区域拥堵排名
@@ -108,8 +136,35 @@ public class PanelCityServiceImpl implements PanelCityService {
         params.add("tpi");
         params.add("sectioncode");
 
-        JSONArray data = getData("/data-server/indices/getIndices", 0,"tsgz","section","", params,null,false, "tpi");
-        return data;
+        JSONArray data = getData("/data-server/indices/getIndices", 1,"tsgz","section","", params,null,false, "tpi");
+        JSONArray result = new JSONArray();
+        for(int i = 0; i < data.size(); i++) {
+            if(data.getJSONObject(i).get("tpi") == null){
+                continue;
+            }
+            result.add(data.getJSONObject(i));
+            if(result.size() > 10) {
+                result.remove(0);
+            }
+        }
+        ArrayList codeList = new ArrayList();
+        for(int i = 0; i < result.size(); i++) {
+            codeList.add(result.getJSONObject(i).getString("sectioncode"));
+        }
+        QueryWrapper<BisSection> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("section_code", codeList);
+        ArrayList<BisSection> list = (ArrayList<BisSection>) bisSectionService.list(queryWrapper);
+        for(int i = 0; i < result.size(); i++) {
+            String code = result.getJSONObject(i).getString("sectioncode");
+            JSONObject item = result.getJSONObject(i);
+            for(BisSection section : list) {
+                if(section.getSectionCode().equals(code)) {
+                    item.put("sectionName", section.getSectionName());
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     // 高速拥堵排名
@@ -120,7 +175,66 @@ public class PanelCityServiceImpl implements PanelCityService {
         params.add("linecode");
 
         JSONArray data = getData("/data-server/indices/getIndices", 0,"tsgz","line","", params,null,false, "tpi");
-        return data;
+        ArrayList codeList = new ArrayList();
+        for(int i = 0; i < data.size(); i++) {
+            codeList.add(data.getJSONObject(i).getString("linecode"));
+        }
+        QueryWrapper<DimHiMainline> queryWrapper = new QueryWrapper<>();
+        queryWrapper.in("mainlineid", codeList);
+        JSONArray result = new JSONArray();
+        for(int i = 0; i < data.size(); i++) {
+            JSONObject item = data.getJSONObject(i);
+            for(DimHiMainline mainline : dimHiMainlineService.list(queryWrapper)) {
+                if(mainline.getMainlineid().equals(item.getString("linecode"))) {
+                    item.put("lineName", mainline.getMainlinename());
+                    result.add(item);
+                    if(result.size() > 10) {
+                        result.remove(0);
+                    }
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    // 重点路段排名
+    @Override
+    public JSONArray getFocusRoadRanking() {
+        JSONArray params = new JSONArray();
+        params.add("tpi");
+        params.add("sectioncode");
+        QueryWrapper<ViewSection> queryWrapper = new QueryWrapper<>();
+        ArrayList codeList = new ArrayList();
+        for(ViewSection section : viewSectionService.list(queryWrapper)) {
+            codeList.add(section.getCode());
+        }
+        QueryWrapper<BisSection> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.in("section_code", codeList);
+        ArrayList<BisSection> list = (ArrayList<BisSection>) bisSectionService.list(queryWrapper2);
+        JSONArray data = getData("/data-server/indices/getIndices", 1,"tsgz","section","", params,null,false, "tpi");
+        JSONArray result = new JSONArray();
+        for(int i = 0; i < data.size(); i++) {
+            if(data.getJSONObject(i).get("tpi") == null){
+                continue;
+            }
+            // 判断codeList中是否包含该路段
+            if(codeList.contains(data.getJSONObject(i).getString("sectioncode"))) {
+                for(BisSection section : list) {
+                    if(section.getSectionCode().equals(data.getJSONObject(i).getString("sectioncode"))) {
+                        data.getJSONObject(i).put("sectionName", section.getSectionName());
+                        break;
+                    }
+                }
+                result.add(data.getJSONObject(i));
+                if(result.size() > 10) {
+                    result.remove(0);
+                }
+            }
+        }
+
+
+        return result;
     }
 
 

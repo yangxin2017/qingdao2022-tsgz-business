@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.BisCrossing;
 import com.bgd.tsgz.entity.ViewIntersection;
+import com.bgd.tsgz.entity.ViewSection;
 import com.bgd.tsgz.service.BisCrossingService;
 import com.bgd.tsgz.service.ViewIntersectionService;
 import io.swagger.annotations.Api;
@@ -31,22 +32,20 @@ public class ViewIntersectionController {
     @GetMapping("getIntersectionList")
     @ApiOperation(value = "获取重点路口列表", notes = "获取重点路口列表")
     public ResponseData<ViewIntersection> getIntersectionList(String name) {
-        QueryWrapper<BisCrossing> queryWrapper = new QueryWrapper<>();
-        ArrayList namelist = new ArrayList();
-        namelist.add("香港西路与延安三路路口");
-        namelist.add("香港路与山东路路口");
-        namelist.add("香港中路与新浦路路口");
-        namelist.add("香港路与南京路路口");
-        namelist.add("香港路与福州路路口");
-        namelist.add("香港中路与燕儿岛路路口");
-        namelist.add("东海路与延安三路路口");
-        namelist.add("东海路与山东路路口");
-        namelist.add("东海西路与新浦路路口");
-        namelist.add("东海西路与南京路路口");
-        namelist.add("东海路与福州路路口");
-        namelist.add("东海路与燕儿岛路路口");
 
-        queryWrapper.in("crossing_name", namelist);
+        QueryWrapper<ViewIntersection> viewIntersectionWrapper = new QueryWrapper<>();
+        ArrayList<String> codeList = new ArrayList<>();
+        // 将viewSectionWrapper所有的code值放入一个数组中
+        for (ViewIntersection viewIntersection : viewIntersectionService.list(viewIntersectionWrapper)) {
+            codeList.add(viewIntersection.getCode());
+        }
+
+        QueryWrapper<BisCrossing> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.in("crossing_code", codeList);
+        if (name != null) {
+            queryWrapper.like("crossing_name", name);
+        }
 
         JSONArray jsonArray = new JSONArray();
         for (BisCrossing bisCrossing : bisCrossingService.list(queryWrapper)) {

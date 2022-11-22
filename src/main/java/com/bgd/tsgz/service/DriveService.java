@@ -30,4 +30,7 @@ public interface DriveService {
 
     // 流量排名
     public JSONArray getSectionFlow();
+
+    // 区域路段排名
+    public JSONArray getSectionRank();
 }

@@ -18,12 +18,6 @@ public class ViewSection {
     @ApiModelProperty("主键")
     private Integer id;
 
-    @ApiModelProperty("名称")
-    private String name;
-    @ApiModelProperty("阈值")
-    private String threshold;
-    @ApiModelProperty("gis")
-    private String gis;
-    @ApiModelProperty("类型")
-    private String type;
+    @ApiModelProperty("路段code")
+    private String code;
 }
