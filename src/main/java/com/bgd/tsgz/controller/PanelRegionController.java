@@ -82,4 +82,10 @@ public class PanelRegionController {
     }
 
 
+    // 获取区域头部
+    @GetMapping("getRegionHead")
+    @ApiOperation(value = "获取区域头部", notes = "获取区域头部")
+    public ResponseData<AcdFile> getRegionHead(){
+        return OK(driveService.getRegionHead());
+    }
 }

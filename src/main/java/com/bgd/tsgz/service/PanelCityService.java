@@ -28,4 +28,10 @@ public interface PanelCityService {
     // 重点路段排名
     public JSONArray getFocusRoadRanking();
 
+    //  停车场
+    public JSONObject getParkingList();
+
+    // 城市概况
+    public JSONArray getCityOverview();
+
 }

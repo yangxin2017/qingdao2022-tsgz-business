@@ -55,6 +55,7 @@ public class AcdfileController {
         JSONArray jsonArray = new JSONArray();
         for (ViewAcf acdFile : ViewAcfService.list(queryWrapper)) {
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put("time", acdFile.getTime());
             jsonObject.put("sglx", acdFile.getSglx());
             jsonObject.put("sgdd", acdFile.getSgdd());
             JSONObject jsonObject1 = new JSONObject();

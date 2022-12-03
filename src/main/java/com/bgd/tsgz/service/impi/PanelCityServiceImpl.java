@@ -1,13 +1,11 @@
 package com.bgd.tsgz.service.impi;
 
 import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.bgd.tsgz.entity.BisArea;
-import com.bgd.tsgz.entity.BisSection;
-import com.bgd.tsgz.entity.DimHiMainline;
-import com.bgd.tsgz.entity.ViewSection;
+import com.bgd.tsgz.entity.*;
 import com.bgd.tsgz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,12 @@ public class PanelCityServiceImpl implements PanelCityService {
     private ViewSectionService viewSectionService;
     @Autowired
     private DimHiMainlineService dimHiMainlineService;
+    @Autowired
+    private ComInfoTbService comInfoTbService;
+    @Autowired
+    private ComInfoTbAccuracyService comInfoTbAccuracyService;
+    @Autowired
+    private CityOverviewService cityOverviewService;
     // 获取实时TPI数据
     @Override
     public JSONObject getTpiList() {
@@ -237,7 +241,30 @@ public class PanelCityServiceImpl implements PanelCityService {
         return result;
     }
 
+    // 停车场
+    @Override
+    public JSONObject getParkingList() {
+        JSONObject result = new JSONObject();
+        QueryWrapper<ComInfoTb> queryWrapper = new QueryWrapper<>();
+        // 计算total列总和
+        queryWrapper.select("sum(total) as total");
+        ComInfoTb comInfoTb = comInfoTbService.getOne(queryWrapper);
+        result.put("total", comInfoTb.getTotal());
 
+        QueryWrapper<ComInfoTbAccuracy> queryWrapper2 = new QueryWrapper<>();
+        // 获取第一行的accuracy
+        queryWrapper2.last("limit 1");
+        ComInfoTbAccuracy comInfoTbAccuracy = comInfoTbAccuracyService.getOne(queryWrapper2);
+        result.put("accuracy", comInfoTbAccuracy.getAccuracy());
+        return result;
+    }
+
+    // 城市概况
+    @Override
+    public JSONArray getCityOverview() {
+        QueryWrapper<CityOverview> queryWrapper = new QueryWrapper<>();
+        return JSONArray.parseArray(JSON.toJSONString(cityOverviewService.list(queryWrapper)));
+    }
     public JSONArray getData(String url, Integer timeLast, String token, String geoDim, String measureColumn, JSONArray columns, String timeDim, Boolean isAll){
         url = "http://10.16.7.14:8005" + url;
         JSONObject params = new JSONObject();

@@ -6,9 +6,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.entity.BisAreaSection;
 import com.bgd.tsgz.entity.BisSection;
+import com.bgd.tsgz.entity.RegionView;
 import com.bgd.tsgz.service.BisAreaSectionService;
 import com.bgd.tsgz.service.BisSectionService;
 import com.bgd.tsgz.service.DriveService;
+import com.bgd.tsgz.service.RegionViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class DriveServiceImpl implements DriveService {
     private BisSectionService bisSectionService;
     @Autowired
     private BisAreaSectionService bisAreaSectionService;
+    @Autowired
+    private RegionViewService regionViewService;
 
     @Override
     public JSONObject getDriveInCycle() {
@@ -210,6 +214,15 @@ public class DriveServiceImpl implements DriveService {
         return result;
     }
 
+    // getRegionHead
+    @Override
+    public JSONObject getRegionHead(){
+        QueryWrapper<RegionView> queryWrapper = new QueryWrapper<>();
+        // 获取一条
+        queryWrapper.last("limit 1");
+        RegionView regionView = regionViewService.getOne(queryWrapper);
+        return JSONObject.parseObject(JSONObject.toJSONString(regionView));
+    }
 
     public JSONArray getData(String url, Integer timeLast, String token, String geoDim, String measureColumn, JSONArray columns, String timeDim, Boolean isAll){
         url = "http://10.16.7.14:8005" + url;

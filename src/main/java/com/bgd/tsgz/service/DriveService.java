@@ -33,4 +33,7 @@ public interface DriveService {
 
     // 区域路段排名
     public JSONArray getSectionRank();
+
+    // 区域头部
+    public JSONObject getRegionHead();
 }

@@ -86,4 +86,18 @@ public class PanelCityController {
         JSONArray result = panelCityService.getFocusRoadRanking();
         return OK(result);
     }
+
+    @GetMapping("getParkingList")
+    @ApiOperation(value = "停车场", notes = "停车场")
+    public ResponseData<AcdFile> getParkingList(){
+        JSONObject result = panelCityService.getParkingList();
+        return OK(result);
+    }
+
+    @GetMapping("getCityOverview")
+    @ApiOperation(value = "城市概况", notes = "城市概况")
+    public ResponseData<AcdFile> getCityOverview(){
+        JSONArray result = panelCityService.getCityOverview();
+        return OK(result);
+    }
 }
