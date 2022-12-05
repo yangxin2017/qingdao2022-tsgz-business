@@ -64,6 +64,7 @@ public class ViewSearchRoadController {
             jsonObject.put("name", bisCrossing.getCrossingName());
             jsonObject.put("lng", bisCrossing.getLongitude());
             jsonObject.put("lat", bisCrossing.getLatitude());
+            jsonObject.put("typeId", "1");
             jsonArray.add(jsonObject);
         }
 
@@ -80,6 +81,7 @@ public class ViewSearchRoadController {
             json.put("id", bisArea.getAreaCode());
             json.put("name", bisArea.getAreaName());
             json.put("threshold", 1);
+            json.put("typeId", "3");
             JSONArray position = new JSONArray();
             // 将position以逗号分割，单位数为lng，双位数为lat，两个一组存入position
             String[] positionArray = bisArea.getCoordinate().split(",");
@@ -120,6 +122,7 @@ public class ViewSearchRoadController {
             json.put("id", bisSection.getSectionCode());
             json.put("name", bisSection.getSectionName());
             json.put("gis", position);
+            json.put("typeId", "2");
 //            jsonArray.add(json);
 
             for(int j = 0; j < position.size()-1; j++){
