@@ -55,7 +55,9 @@ public class ViewLightController {
         JSONArray jsonArray = new JSONArray();
 
         QueryWrapper<BisDevice> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("devicetype_id", "451");
+//        queryWrapper.eq("devicetype_id", "451");
+        queryWrapper.eq("devicetype_id", "111");
+        queryWrapper.eq("isactive",1);
         for (BisDevice bisDevice : bisDeviceService.list(queryWrapper)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("lng", bisDevice.getLongitude());

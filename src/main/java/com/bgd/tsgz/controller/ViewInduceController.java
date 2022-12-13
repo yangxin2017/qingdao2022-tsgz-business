@@ -35,7 +35,7 @@ public class ViewInduceController {
         JSONArray jsonArray = new JSONArray();
 
         QueryWrapper<BisDevice> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("devicetype_id", "451");
+        queryWrapper.eq("devicetype_id", "101");
         for (BisDevice bisDevice : bisDeviceService.list(queryWrapper)) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("lng", bisDevice.getLongitude());

@@ -2,9 +2,15 @@ package com.bgd.tsgz.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.AcdFile;
+import com.bgd.tsgz.entity.CityClustersEvaluate;
+import com.bgd.tsgz.entity.CityEvaluate;
+import com.bgd.tsgz.entity.ProblemDiagnosis;
+import com.bgd.tsgz.service.CityEvaluateService;
 import com.bgd.tsgz.service.PanelCityService;
+import com.bgd.tsgz.service.ProblemDiagnosisService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +28,10 @@ public class PanelCityController {
 
     @Autowired
     private PanelCityService panelCityService;
+    @Autowired
+    private CityEvaluateService cityEvaluateService;
+    @Autowired
+    private ProblemDiagnosisService problemDiagnosisService;
 
 
     @GetMapping("getTpiList")
@@ -99,5 +109,56 @@ public class PanelCityController {
     public ResponseData<AcdFile> getCityOverview(){
         JSONArray result = panelCityService.getCityOverview();
         return OK(result);
+    }
+    @GetMapping("getCityEvaluate")
+    @ApiOperation(value = "城市综合评分", notes = "城市综合评分")
+    public ResponseData getCityEvaluate() {
+        QueryWrapper<CityEvaluate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","1");
+        return OK(cityEvaluateService.list(queryWrapper));
+    }
+
+
+    // 城市群综合评价
+    @GetMapping("getCityEvaluateList")
+    @ApiOperation(value = "城市综合评价", notes = "城市综合评价")
+    public ResponseData getCityEvaluateList() {
+        QueryWrapper<CityEvaluate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","2");
+        return OK(cityEvaluateService.list(queryWrapper));
+    }
+
+    // 城市群安全评分
+    @GetMapping("getCityEvaluateSafe")
+    @ApiOperation(value = "城市安全评分", notes = "城市安全评分")
+    public ResponseData getCityEvaluateSafe() {
+        QueryWrapper<CityEvaluate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","3");
+        return OK(cityEvaluateService.list(queryWrapper));
+    }
+
+    // 高效
+    @GetMapping("getCityEvaluateEfficient")
+    @ApiOperation(value = "城市高效评分", notes = "城市高效评分")
+    public ResponseData getCityEvaluateEfficient() {
+        QueryWrapper<CityEvaluate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","4");
+        return OK(cityEvaluateService.list(queryWrapper));
+    }
+
+    // 便捷
+    @GetMapping("getCityEvaluateConvenient")
+    @ApiOperation(value = "城市便捷评分", notes = "城市便捷评分")
+    public ResponseData getCityEvaluateConvenient() {
+        QueryWrapper<CityEvaluate> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","5");
+        return OK(cityEvaluateService.list(queryWrapper));
+    }
+
+    @GetMapping("getCityEvaluateProblemDiagnosis")
+    @ApiOperation(value = "城市问题诊断", notes = "城市问题诊断")
+    public ResponseData getCityEvaluateProblemDiagnosis() {
+        QueryWrapper<ProblemDiagnosis> queryWrapper = new QueryWrapper<>();
+        return OK(problemDiagnosisService.list(queryWrapper));
     }
 }

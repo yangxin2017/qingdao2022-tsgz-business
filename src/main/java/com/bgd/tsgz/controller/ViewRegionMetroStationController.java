@@ -40,6 +40,7 @@ public class ViewRegionMetroStationController {
             json.put("name", poiSubway.getName());
             json.put("lng", poiSubway.getDisplayX());
             json.put("lat", poiSubway.getDisplayY());
+            json.put("type",poiSubway.getType());
 
             jsonArray.add(json);
         }
