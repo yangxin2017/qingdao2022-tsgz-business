@@ -17,7 +17,7 @@ public class ViewAcf {
     @TableId(type= IdType.AUTO)
     // "time", sgdd, sglx, jdwz
     @ApiModelProperty("事故时间")
-    private String time;
+    private Date time;
     @ApiModelProperty("事故地点")
     private String sgdd;
     @ApiModelProperty("事故类型")

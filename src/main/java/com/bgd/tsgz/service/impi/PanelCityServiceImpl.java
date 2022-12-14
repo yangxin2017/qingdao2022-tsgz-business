@@ -10,7 +10,13 @@ import com.bgd.tsgz.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 @Service
 public class PanelCityServiceImpl implements PanelCityService {
@@ -43,13 +49,43 @@ public class PanelCityServiceImpl implements PanelCityService {
 
     // 获取24小时TPI数据
     @Override
-    public JSONObject getTpi24List() {
+    public JSONObject getTpi24List(String type,String time) throws ParseException {
         JSONObject jsonObject = new JSONObject();
-        JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", 0,"tsgz","city","tpi",new JSONArray(),null,true);
-        jsonObject.put("nowData", data);
+//        JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", 0,"tsgz","city","tpi",new JSONArray(),null,true);
+        String timeDim = null;
+        if(type.equals("3")){
+            timeDim = "d";
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormat.parse(time);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE, -31);
+            date = calendar.getTime();
+            String startTime = dateFormat.format(date);
+            calendar.add(Calendar.DATE, -31);
+            date = calendar.getTime();
+            String lastTime = dateFormat.format(date);
 
-        data = getData("/data-server/indices/getPeriodMeasureRet", 7,"tsgz","city","tpi",new JSONArray(),null,true);
-        jsonObject.put("lastData", data);
+            JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", startTime,time+" 23:59:59","tsgz","city","tpi",new JSONArray(),timeDim,true);
+            jsonObject.put("nowData", data);
+
+            data = getData("/data-server/indices/getPeriodMeasureRet", lastTime, startTime,"tsgz","city","tpi",new JSONArray(),timeDim,true);
+            jsonObject.put("lastData", data);
+        }else{
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = dateFormat.parse(time);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE, -7);
+            date = calendar.getTime();
+            String lastTime = dateFormat.format(date);
+
+            JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", time,"tsgz","city","tpi",new JSONArray(),timeDim,true);
+            jsonObject.put("nowData", data);
+
+            data = getData("/data-server/indices/getPeriodMeasureRet", lastTime,"tsgz","city","tpi",new JSONArray(),timeDim,true);
+            jsonObject.put("lastData", data);
+        }
 
         return jsonObject;
     }
@@ -315,4 +351,41 @@ public class PanelCityServiceImpl implements PanelCityService {
         return data;
     }
 
+    public JSONArray getData(String url, String time, String token, String geoDim, String measureColumn, JSONArray columns, String timeDim, Boolean isAll){
+        url = "http://10.16.7.14:8005" + url;
+        JSONObject params = new JSONObject();
+        params.put("token", token);
+        params.put("geoDim",geoDim);
+        if(timeDim != null){
+            params.put("timeDim",timeDim);
+        }
+        String starttime = time+" 00:00:00";
+        String endttime =  time+" 23:59:59";
+        params.put("startTime", starttime);
+        params.put("endTime", endttime);
+        params.put("columns", columns);
+        params.put("measureColumn",measureColumn);
+        String result = HttpUtil.post(url, params.toJSONString());
+        JSONObject resultJson = JSONObject.parseObject(result);
+        JSONArray data = resultJson.getJSONArray("result");
+        return data;
+    }
+
+    public JSONArray getData(String url, String starttime, String endttime, String token, String geoDim, String measureColumn, JSONArray columns, String timeDim, Boolean isAll){
+        url = "http://10.16.7.14:8005" + url;
+        JSONObject params = new JSONObject();
+        params.put("token", token);
+        params.put("geoDim",geoDim);
+        if(timeDim != null){
+            params.put("timeDim",timeDim);
+        }
+        params.put("startTime", starttime);
+        params.put("endTime", endttime);
+        params.put("columns", columns);
+        params.put("measureColumn",measureColumn);
+        String result = HttpUtil.post(url, params.toJSONString());
+        JSONObject resultJson = JSONObject.parseObject(result);
+        JSONArray data = resultJson.getJSONArray("result");
+        return data;
+    }
 }

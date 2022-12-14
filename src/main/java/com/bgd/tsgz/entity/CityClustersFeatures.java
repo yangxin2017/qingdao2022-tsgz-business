@@ -20,9 +20,9 @@ public class CityClustersFeatures {
     @ApiModelProperty("城市群名称")
     private String name;
     @ApiModelProperty("城市群活跃度")
-    private String vitality;
+    private Integer vitality;
     @ApiModelProperty("城市群规模")
-    private String scale;
+    private Integer scale;
     @ApiModelProperty("城市群中心性")
-    private String centrality;
+    private Integer centrality;
 }

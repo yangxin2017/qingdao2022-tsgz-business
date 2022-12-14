@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static com.bgd.tsgz.common.ResponseData.OK;
 import static java.time.LocalDate.now;
@@ -66,5 +67,46 @@ public class AcdfileController {
         }
 
         return OK(jsonArray);
+    }
+
+//    事故统计
+    @GetMapping("getAcdFileCount")
+    @ApiOperation(value = "事故统计", notes = "事故统计")
+    public ResponseData<ViewAcf> getAcdFileCount(String time,String type) throws ParseException {
+        QueryWrapper<ViewAcf> queryWrapper = new QueryWrapper<>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(type.equals("1")){
+            String startTime = time+"-01";
+            String endTime = time+"-31";
+            Date startdate = simpleDateFormat.parse(startTime);
+            Date enddate = simpleDateFormat.parse(endTime);
+//        根据time列进行分类统计
+//            获取startTime到endTime的数据
+            queryWrapper.between("time",startdate,enddate);
+            queryWrapper.select("count(*) as count, time");
+            queryWrapper.groupBy("time");
+            queryWrapper.orderByAsc("time");
+        }else if(type.equals("2")){
+            String startTime = time+"-01-01";
+            String endTime = time+"-12-31";
+            Date startdate = simpleDateFormat.parse(startTime);
+            Date enddate = simpleDateFormat.parse(endTime);
+            queryWrapper.between("time",startdate,enddate);
+//            postgrea对数据按月份进行分类统计
+            queryWrapper.select("count(*) as count, to_char(time,'yyyy-MM') as time");
+            queryWrapper.groupBy("to_char(time,'yyyy-MM')");
+            queryWrapper.orderByAsc("to_char(time,'yyyy-MM')");
+        }
+        List<Map<String, Object>> list = ViewAcfService.listMaps(queryWrapper);
+//        ViewAcfService.count(queryWrapper);
+//        JSONObject jsonObject = new JSONObject();
+//        for(ViewAcf acdFile : ViewAcfService.list(queryWrapper)){
+//            if(jsonObject.containsKey(acdFile.getTime())){
+//                jsonObject.put(acdFile.getTime(), jsonObject.getInteger(acdFile.getTime())+1);
+//            }else{
+//                jsonObject.put(acdFile.getTime(), 1);
+//            }
+//        }
+        return OK(list);
     }
 }

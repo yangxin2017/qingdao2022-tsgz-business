@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.text.ParseException;
+
 import static com.bgd.tsgz.common.ResponseData.OK;
 
 @RestController
@@ -43,8 +45,8 @@ public class PanelCityController {
 
     @GetMapping("getTpi24List")
     @ApiOperation(value = "交通指数/拥堵指数24小时", notes = "交通指数/拥堵指数24小时")
-    public ResponseData<AcdFile> getTpi24List(){
-        JSONObject result = panelCityService.getTpi24List();
+    public ResponseData<AcdFile> getTpi24List(String type,String time) throws ParseException {
+        JSONObject result = panelCityService.getTpi24List(type,time);
         return OK(result);
     }
 

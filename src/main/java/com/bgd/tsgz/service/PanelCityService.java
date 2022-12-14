@@ -3,9 +3,11 @@ package com.bgd.tsgz.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.text.ParseException;
+
 public interface PanelCityService {
     public JSONObject getTpiList();
-    public JSONObject getTpi24List();
+    public JSONObject getTpi24List(String type,String time) throws ParseException;
 
     // 获取平均速度
     public JSONObject getAvgSpeedList();
