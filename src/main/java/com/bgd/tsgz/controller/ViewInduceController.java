@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.BisDevice;
 import com.bgd.tsgz.entity.ViewInduce;
@@ -28,6 +29,7 @@ public class ViewInduceController {
 
     @GetMapping("getInduceList")
     @ApiOperation(value = "获取诱导列表", notes = "获取诱导列表")
+    @RequestLog(moduleName = "诱导",functionName = "获取诱导列表")
     public ResponseData<ViewInduce> getInduceList() {
 //        QueryWrapper<ViewInduce> queryWrapper = new QueryWrapper<>();
 //

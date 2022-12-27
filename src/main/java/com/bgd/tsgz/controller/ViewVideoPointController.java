@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.BisDevice;
 import com.bgd.tsgz.entity.ViewVideoPoint;
@@ -28,6 +29,7 @@ public class ViewVideoPointController {
 
     @GetMapping("getVideoPointList")
     @ApiOperation(value = "获取视频点位列表", notes = "获取视频点位列表")
+    @RequestLog(moduleName = "视频点位",functionName = "获取视频点位列表")
     public ResponseData<ViewVideoPoint> getVideoPointList() {
 //        QueryWrapper<ViewVideoPoint> queryWrapper = new QueryWrapper<>();
 //

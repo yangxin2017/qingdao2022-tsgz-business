@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.CityClustersContact;
 import com.bgd.tsgz.entity.CityClustersEvaluate;
@@ -37,6 +38,7 @@ public class PanelClustersController {
     // 城市群节点特征交通活力值排名
     @GetMapping("getVitalityList")
     @ApiOperation(value = "获取交通活力值排名", notes = "获取交通活力值排名")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取交通活力值排名")
     public Object getClustersVitality() {
         QueryWrapper<CityClustersFeatures> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("vitality");
@@ -53,6 +55,7 @@ public class PanelClustersController {
     // 城市群节点特征交通规模值排名
     @GetMapping("getScaleList")
     @ApiOperation(value = "获取交通规模值排名", notes = "获取交通规模值排名")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取交通规模值排名")
     public Object getClustersScale() {
         QueryWrapper<CityClustersFeatures> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("scale");
@@ -69,6 +72,7 @@ public class PanelClustersController {
     // 城市群节点特征交通中心性值排名
     @GetMapping("getCentralityList")
     @ApiOperation(value = "获取交通中心性值排名", notes = "获取交通中心性值排名")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取交通中心性值排名")
     public Object getClustersCentrality() {
         QueryWrapper<CityClustersFeatures> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("centrality");
@@ -85,6 +89,7 @@ public class PanelClustersController {
     // 城市群城市联系特征分析
     @GetMapping("getContactList")
     @ApiOperation(value = "获取城市联系特征分析", notes = "获取城市联系特征分析")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取城市联系特征分析")
     public Object getClustersContact() {
         QueryWrapper<CityClustersContact> queryWrapper = new QueryWrapper<>();
         return OK(cityClustersContactService.list(queryWrapper));
@@ -93,14 +98,18 @@ public class PanelClustersController {
     // 城市群概况
     @GetMapping("getCityClustersSurvey")
     @ApiOperation(value = "城市群概况", notes = "城市群概况")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取城市群概况")
     public ResponseData getCityClustersSurvey() {
         QueryWrapper<CityClustersSurvey> queryWrapper = new QueryWrapper<>();
+        // 根据position排序
+        queryWrapper.orderByAsc("position");
         return OK(cityClustersSurveyService.list(queryWrapper));
     }
 
     // 城市群综合评分
     @GetMapping("getCityClustersEvaluate")
     @ApiOperation(value = "城市群综合评分", notes = "城市群综合评分")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取城市群综合评分")
     public ResponseData getCityClustersEvaluate() {
         QueryWrapper<CityClustersEvaluate> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("type","1");
@@ -110,6 +119,7 @@ public class PanelClustersController {
     // 城市群综合评价
     @GetMapping("getCityClustersEvaluateList")
     @ApiOperation(value = "城市群综合评价", notes = "城市群综合评价")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取城市群综合评价")
     public ResponseData getCityClustersEvaluateList() {
         QueryWrapper<CityClustersEvaluate> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("type","2");
@@ -119,6 +129,7 @@ public class PanelClustersController {
     // 城市群安全评分
     @GetMapping("getCityClustersEvaluateSafe")
     @ApiOperation(value = "城市群安全评分", notes = "城市群安全评分")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取城市群安全评分")
     public ResponseData getCityClustersEvaluateSafe() {
         QueryWrapper<CityClustersEvaluate> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("type","3");
@@ -128,6 +139,7 @@ public class PanelClustersController {
     // 高效
     @GetMapping("getCityClustersEvaluateEfficient")
     @ApiOperation(value = "城市群高效评分", notes = "城市群高效评分")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取城市群高效评分")
     public ResponseData getCityClustersEvaluateEfficient() {
         QueryWrapper<CityClustersEvaluate> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("type","4");
@@ -137,6 +149,7 @@ public class PanelClustersController {
     // 便捷
     @GetMapping("getCityClustersEvaluateConvenient")
     @ApiOperation(value = "城市群便捷评分", notes = "城市群便捷评分")
+    @RequestLog(moduleName = "城市群数据面板",functionName = "获取城市群便捷评分")
     public ResponseData getCityClustersEvaluateConvenient() {
         QueryWrapper<CityClustersEvaluate> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("type","5");

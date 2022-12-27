@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.BisDevice;
 import com.bgd.tsgz.entity.ViewLight;
@@ -46,6 +47,7 @@ public class ViewLightController {
     // getLightList，接收name参数
     @GetMapping("getLightList")
     @ApiOperation(value = "获取信号灯列表", notes = "获取信号灯列表")
+    @RequestLog(moduleName = "信号灯",functionName = "获取信号灯列表")
     public ResponseData<ViewLight> getLightList(String name) {
 //        QueryWrapper<ViewLight> queryWrapper = new QueryWrapper<>();
 //        if(name != null && !name.equals("")){

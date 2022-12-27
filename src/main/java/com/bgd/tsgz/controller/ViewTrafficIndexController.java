@@ -2,6 +2,7 @@ package com.bgd.tsgz.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewTrafficIndex;
 import com.bgd.tsgz.entity.ViewTrafficParking;
@@ -37,6 +38,7 @@ public class ViewTrafficIndexController {
 
     @GetMapping("getTrafficIndexList")
     @ApiOperation(value = "获取指数列表", notes = "获取指数列表")
+    @RequestLog(moduleName = "交通运行",functionName = "获取指数列表")
     public ResponseData<ViewTrafficIndex> getTrafficIndexList() {
         QueryWrapper<ViewTrafficIndex> queryWrapper = new QueryWrapper<>();
 
@@ -45,6 +47,7 @@ public class ViewTrafficIndexController {
 
     @GetMapping("getTrafficParkingList")
     @ApiOperation(value = "获取停车场位数量", notes = "获取停车场位数量")
+    @RequestLog(moduleName = "交通运行",functionName = "获取停车场位数量")
     public ResponseData<ViewTrafficParking> getTrafficParkingList() {
         QueryWrapper<ViewTrafficParking> queryWrapper = new QueryWrapper<>();
 
@@ -74,6 +77,7 @@ public class ViewTrafficIndexController {
 
     @GetMapping("getTrafficRegionList")
     @ApiOperation(value = "获取区域列表", notes = "获取区域列表")
+    @RequestLog(moduleName = "交通运行",functionName = "获取区域列表")
     public ResponseData<ViewTrafficRegion>  getTrafficRegionList() {
         QueryWrapper<ViewTrafficRegion> queryWrapper = new QueryWrapper<>();
 
@@ -85,6 +89,7 @@ public class ViewTrafficIndexController {
 
     @GetMapping("getTrafficSectionList")
     @ApiOperation(value = "获取道路列表", notes = "获取道路列表")
+    @RequestLog(moduleName = "交通运行",functionName = "获取道路列表")
     public ResponseData<ViewTrafficSection>  getTrafficSectionList() {
         QueryWrapper<ViewTrafficSection> queryWrapper = new QueryWrapper<>();
 

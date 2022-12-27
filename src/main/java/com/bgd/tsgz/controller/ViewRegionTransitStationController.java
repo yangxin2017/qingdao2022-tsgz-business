@@ -2,6 +2,7 @@ package com.bgd.tsgz.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.Mcstationinfogs;
 import com.bgd.tsgz.entity.ViewRegionTransitStation;
@@ -30,6 +31,7 @@ public class ViewRegionTransitStationController {
 
     @GetMapping("getRegionTransitStationList")
     @ApiOperation(value = "获取公交站点列表", notes = "获取公交站点列表")
+    @RequestLog(moduleName = "公交站点",functionName = "获取公交站点列表")
     public ResponseData<ViewRegionTransitStation> getRegionTransitStationList() {
 //        QueryWrapper<ViewRegionTransitStation> queryWrapper = new QueryWrapper<>();
 //

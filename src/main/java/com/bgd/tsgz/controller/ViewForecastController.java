@@ -3,9 +3,16 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
+import com.bgd.tsgz.entity.BisCrossing;
 import com.bgd.tsgz.entity.ViewForecast;
+import com.bgd.tsgz.entity.VolumPedestrianPrediction;
+import com.bgd.tsgz.entity.VolumPrediction;
+import com.bgd.tsgz.service.BisCrossingService;
 import com.bgd.tsgz.service.ViewForecastService;
+import com.bgd.tsgz.service.VolumPedestrianPredictionService;
+import com.bgd.tsgz.service.VolumPredictionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 import static com.bgd.tsgz.common.ResponseData.ERROR;
 import static com.bgd.tsgz.common.ResponseData.OK;
@@ -26,9 +33,16 @@ import static com.bgd.tsgz.common.ResponseData.OK;
 public class ViewForecastController {
     @Autowired
     private ViewForecastService viewForecastService;
+    @Autowired
+    private BisCrossingService bisCrossingService;
+    @Autowired
+    private VolumPredictionService volumPredictionService;
+    @Autowired
+    private VolumPedestrianPredictionService volumPedestrianPredictionService;
 
     @GetMapping("getForecastList")
     @ApiOperation(value = "获取交通路况预测列表", notes = "获取交通路况预测列表")
+    @RequestLog(moduleName = "预测算法",functionName = "获取交通路况预测列表")
     public ResponseData<ViewForecast> getForecastList(String forecastId, String date) throws ParseException {
         QueryWrapper<ViewForecast> queryWrapper = new QueryWrapper<>();
         if(forecastId != null && !forecastId.equals("")){
@@ -102,5 +116,92 @@ public class ViewForecastController {
 
         return OK(jsonobj);
 //        return OK(viewForecastService.list(queryWrapper));
+    }
+
+    @GetMapping("getTrafficForecastList")
+    @ApiOperation(value = "获取交通路况预测列表-prediction", notes = "获取交通路况预测列表-prediction")
+    @RequestLog(moduleName = "预测算法",functionName = "获取交通路况预测列表-返回为点位数据")
+    public ResponseData getTrafficForecastList(String modelName, String cintsid, String startTime, String endTime){
+        QueryWrapper<VolumPrediction> queryWrapper = new QueryWrapper<>();
+        if(modelName != null && !modelName.equals("")){
+            queryWrapper.eq("modelname", modelName);
+        }
+        if(cintsid != null && !cintsid.equals("")){
+            queryWrapper.eq("cintsid", cintsid);
+        }
+        if(startTime != null && !startTime.equals("") && endTime != null && !endTime.equals("")){
+            // 将startTime和endTime转为时间戳
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date start = simpleDateFormat.parse(startTime);
+                Date end = simpleDateFormat.parse(endTime);
+                queryWrapper.between("future_time", start, end);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        QueryWrapper<BisCrossing> queryWrapper1 = new QueryWrapper<>();
+
+        // queryWrapper的cintsid与queryWrapper1的hicon_crossing相同的数据
+        List<VolumPrediction> volumPredictionList = volumPredictionService.list(queryWrapper);
+        List<BisCrossing> bisCrossingList = bisCrossingService.list(queryWrapper1);
+        List ret = new ArrayList<>();
+        for(VolumPrediction volumPrediction : volumPredictionList){
+            for(BisCrossing bisCrossing : bisCrossingList){
+                if(volumPrediction.getCintsid().equals(bisCrossing.getHiconCrossing())){
+                    JSONObject json = new JSONObject();
+                    json.put("cintsid", volumPrediction.getCintsid());
+                    json.put("modelname", volumPrediction.getModelName());
+                    json.put("time", volumPrediction.getFutureTime());
+                    json.put("volum", volumPrediction.getVolum());
+                    json.put("name", bisCrossing.getCrossingName());
+                    json.put("lng",bisCrossing.getLongitude());
+                    json.put("lat",bisCrossing.getLatitude());
+                    ret.add(json);
+                    break;
+                }
+            }
+        }
+        Collections.sort(ret, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject o1, JSONObject o2) {
+                return o1.getString("time").compareTo(o2.getString("time"));
+            }
+        });
+        return OK(ret);
+    }
+
+    // 行人行为预测
+    @GetMapping("getPedestrianBehaviorList")
+    @ApiOperation(value = "获取行人行为预测列表", notes = "获取行人行为预测列表")
+    @RequestLog(moduleName = "预测算法",functionName = "获取行人行为预测列表")
+    public ResponseData getPedestrianBehaviorList(String cintsid, String startTime, String endTime){
+        QueryWrapper<VolumPedestrianPrediction> queryWrapper = new QueryWrapper<>();
+        if(cintsid != null && !cintsid.equals("")){
+            queryWrapper.eq("cross_id", cintsid);
+        }
+        if(startTime != null && !startTime.equals("") && endTime != null && !endTime.equals("")){
+            // 将startTime和endTime转为时间戳
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date start = simpleDateFormat.parse(startTime);
+                Date end = simpleDateFormat.parse(endTime);
+                queryWrapper.between("future_time", start, end);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        List<VolumPedestrianPrediction> volumPedestrianPredictionList = volumPedestrianPredictionService.list(queryWrapper);
+        JSONArray ret = new JSONArray();
+        for(VolumPedestrianPrediction volumPedestrianPrediction : volumPedestrianPredictionList){
+            JSONObject json = new JSONObject();
+            json.put("id", volumPedestrianPrediction.getId());
+            json.put("lng", volumPedestrianPrediction.getGridLongitude());
+            json.put("lat", volumPedestrianPrediction.getGridLatitude());
+            json.put("time", volumPedestrianPrediction.getFutureTime());
+            json.put("volum", volumPedestrianPrediction.getGridVolum());
+            ret.add(json);
+        }
+        return OK(ret);
     }
 }

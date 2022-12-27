@@ -54,7 +54,7 @@ public class PanelCityServiceImpl implements PanelCityService {
 //        JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", 0,"tsgz","city","tpi",new JSONArray(),null,true);
         String timeDim = null;
         if(type.equals("3")){
-            timeDim = "d";
+            timeDim = "1d";
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = dateFormat.parse(time);
             Calendar calendar = Calendar.getInstance();

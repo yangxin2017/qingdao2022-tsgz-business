@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.*;
 import com.bgd.tsgz.service.*;
@@ -36,6 +37,7 @@ public class ViewSearchRoadController {
 
     @GetMapping("getSearchRoadList")
     @ApiOperation(value = "获取搜索列表", notes = "获取搜索列表")
+    @RequestLog(moduleName = "三合一搜索功能",functionName = "获取搜索列表")
     public ResponseData getSearchRoadList(String name) {
         if(name == null || name.equals("")){
             name = "";

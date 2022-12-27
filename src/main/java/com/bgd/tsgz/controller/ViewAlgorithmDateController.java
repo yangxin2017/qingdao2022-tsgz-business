@@ -1,6 +1,7 @@
 package com.bgd.tsgz.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewAlgorithmDate;
 import com.bgd.tsgz.service.ViewAlgorithmDateService;
@@ -23,6 +24,7 @@ public class ViewAlgorithmDateController {
 
     @GetMapping("getAlgorithmDateList")
     @ApiOperation(value = "获取算法中存在数据的日期列表", notes = "获取算法中存在数据的日期列表")
+    @RequestLog(moduleName = "预测算法",functionName = "获取算法中存在数据的日期列表")
     public ResponseData<ViewAlgorithmDate> getAlgorithmDateList(Integer aid) {
         QueryWrapper<ViewAlgorithmDate> queryWrapper = new QueryWrapper<>();
         if(aid != null) {

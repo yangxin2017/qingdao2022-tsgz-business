@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.BisArea;
 import com.bgd.tsgz.entity.ViewRegion;
@@ -29,6 +30,7 @@ public class ViewRegionController {
 
     @GetMapping("getRegionList")
     @ApiOperation(value = "获取重点区域列表", notes = "获取重点区域列表")
+    @RequestLog(moduleName = "重点区域",functionName = "获取重点区域列表")
     public ResponseData<ViewRegion> getRegionList(String name) {
         QueryWrapper<BisArea> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("area_type", "02");

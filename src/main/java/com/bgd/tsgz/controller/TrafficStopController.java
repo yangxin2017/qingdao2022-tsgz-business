@@ -1,6 +1,7 @@
 package com.bgd.tsgz.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.TrafficStop;
 import com.bgd.tsgz.service.TrafficStopService;
@@ -23,6 +24,7 @@ public class TrafficStopController {
 
     @GetMapping("getTrafficStopList")
     @ApiOperation(value = "获取航空交通站点列表", notes = "获取航空交通站点列表")
+    @RequestLog(moduleName = "交通站点",functionName = "获取航空交通站点列表")
     public ResponseData getTrafficStopList() {
         QueryWrapper<TrafficStop> queryWrapper = new QueryWrapper();
         queryWrapper.eq("type", "1");
@@ -31,6 +33,7 @@ public class TrafficStopController {
 
     @GetMapping("getAutomobileStationList")
     @ApiOperation(value = "获取汽车站点列表", notes = "获取汽车站点列表")
+    @RequestLog(moduleName = "交通站点",functionName = "获取汽车站点列表")
     public ResponseData getAutomobileStationList() {
         QueryWrapper<TrafficStop> queryWrapper = new QueryWrapper();
         queryWrapper.eq("type", "2");
@@ -39,6 +42,7 @@ public class TrafficStopController {
 
     @GetMapping("getRailwayStationList")
     @ApiOperation(value = "获取铁路站点列表", notes = "获取铁路站点列表")
+    @RequestLog(moduleName = "交通站点",functionName = "获取铁路站点列表")
     public ResponseData getRailwayStationList() {
         QueryWrapper<TrafficStop> queryWrapper = new QueryWrapper();
         queryWrapper.eq("type", "3");

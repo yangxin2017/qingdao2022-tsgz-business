@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewCarbon;
 import com.bgd.tsgz.service.ViewCarbonService;
@@ -24,6 +25,7 @@ public class ViewCarbonController {
 
     @GetMapping("getCarbonHeatList")
     @ApiOperation(value = "获取碳排放热力", notes = "获取碳排放热力")
+    @RequestLog(moduleName = "碳排放",functionName = "获取碳排放热力")
     public ResponseData<ViewCarbon> getCarbonHeatList() {
         QueryWrapper<ViewCarbon> queryWrapper = new QueryWrapper<>();
 

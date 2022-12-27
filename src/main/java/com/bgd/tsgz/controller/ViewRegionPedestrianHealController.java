@@ -1,6 +1,7 @@
 package com.bgd.tsgz.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewRegionPedestrianHeal;
 import com.bgd.tsgz.service.ViewRegionPedestrianHealService;
@@ -22,6 +23,7 @@ public class ViewRegionPedestrianHealController {
 
     @GetMapping("getRegionPedestrianHealList")
     @ApiOperation(value = "获取行人分布热力列表", notes = "获取行人分布热力列表")
+    @RequestLog(moduleName = "行人分布",functionName = "获取行人分布热力列表")
     public ResponseData<ViewRegionPedestrianHeal> getRegionPedestrianHealList() {
         QueryWrapper<ViewRegionPedestrianHeal> queryWrapper = new QueryWrapper<>();
 

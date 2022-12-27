@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.entity.CityClustersContact;
 import com.bgd.tsgz.service.CityClustersContactService;
 import io.swagger.annotations.Api;
@@ -26,6 +27,7 @@ public class CityClustersController {
     // 获取出行联系列表
     @GetMapping("getTravelContactList")
     @ApiOperation(value = "地图出行联系", notes = "地图出行联系")
+    @RequestLog(moduleName = "出行联系",functionName = "获取地图出行联系列表")
     public Object getTravelContactList() {
         QueryWrapper<CityClustersContact> queryWrapper = new QueryWrapper();
         JSONArray result = new JSONArray();

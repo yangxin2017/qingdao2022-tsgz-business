@@ -4,6 +4,7 @@ import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewTraffic;
 import com.bgd.tsgz.service.ViewTrafficService;
@@ -28,6 +29,7 @@ public class ViewTrafficController {
 
     @GetMapping("getTrafficList")
     @ApiOperation(value = "获取交通路况列表", notes = "获取交通路况列表")
+    @RequestLog(moduleName = "交通路况",functionName = "获取交通路况列表")
     public ResponseData getTrafficList() {
         List list = viewTrafficService.getTrafficApiList();
         return OK(list);

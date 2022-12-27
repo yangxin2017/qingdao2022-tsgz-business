@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.BisSection;
 import com.bgd.tsgz.entity.ViewSection;
@@ -31,7 +32,8 @@ public class ViewSectionController {
 
     @GetMapping("getSectionList")
     @ApiOperation(value = "获取重点路段列表", notes = "获取重点路段列表")
-    public ResponseData<ViewSection> getSectionList(String name) {
+    @RequestLog(moduleName = "重点路段",functionName = "获取重点路段列表")
+    public ResponseData<ViewSection> getSectionList(String name , String areaCode) {
         QueryWrapper<ViewSection> viewSectionWrapper = new QueryWrapper<>();
         ArrayList<String> codeList = new ArrayList<>();
         // 将viewSectionWrapper所有的code值放入一个数组中
@@ -43,6 +45,9 @@ public class ViewSectionController {
         queryWrapper.in("section_code", codeList);
         if (name != null) {
             queryWrapper.like("section_name", name);
+        }
+        if (areaCode != null) {
+            queryWrapper.eq("area_code", areaCode);
         }
         JSONArray jsonArray = new JSONArray();
         for(BisSection bisSection : bisSectionService.list(queryWrapper)){

@@ -1,6 +1,7 @@
 package com.bgd.tsgz.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewAlgorithm;
 import com.bgd.tsgz.service.ViewAlgorithmService;
@@ -22,6 +23,7 @@ public class ViewAlgorithmController {
 
     @GetMapping("getAlgorithmList")
     @ApiOperation(value = "获取预测算法列表", notes = "获取预测算法列表")
+    @RequestLog(moduleName = "预测算法",functionName = "获取预测算法列表")
     public ResponseData<ViewAlgorithm> getAlgorithmList() {
         QueryWrapper<ViewAlgorithm> queryWrapper = new QueryWrapper<>();
 

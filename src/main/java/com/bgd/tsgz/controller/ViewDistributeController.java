@@ -1,6 +1,7 @@
 package com.bgd.tsgz.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.ViewDistribute;
 import com.bgd.tsgz.service.ViewDistributeService;
@@ -22,6 +23,7 @@ public class ViewDistributeController {
 
     @GetMapping("getDistributeList")
     @ApiOperation(value = "获取职住分布列表", notes = "获取职住分布列表")
+    @RequestLog(moduleName = "职住分布",functionName = "获取职住分布列表")
     public ResponseData<ViewDistribute> getDistributeList() {
         QueryWrapper<ViewDistribute> queryWrapper = new QueryWrapper<>();
 

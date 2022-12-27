@@ -3,6 +3,7 @@ package com.bgd.tsgz.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
 import com.bgd.tsgz.entity.BisCrossing;
 import com.bgd.tsgz.entity.ViewIntersection;
@@ -31,6 +32,7 @@ public class ViewIntersectionController {
 
     @GetMapping("getIntersectionList")
     @ApiOperation(value = "获取重点路口列表", notes = "获取重点路口列表")
+    @RequestLog(moduleName = "重点路口",functionName = "获取重点路口列表")
     public ResponseData<ViewIntersection> getIntersectionList(String name) {
 
         QueryWrapper<ViewIntersection> viewIntersectionWrapper = new QueryWrapper<>();
