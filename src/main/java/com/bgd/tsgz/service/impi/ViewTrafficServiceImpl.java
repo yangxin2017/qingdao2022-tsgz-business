@@ -110,7 +110,10 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
                 }
             }
         }
+<<<<<<< HEAD
 //        return isImp;
+=======
+>>>>>>> ec480722e459b5488a53550af06086c1638abb97
         return true;
     }
 }
