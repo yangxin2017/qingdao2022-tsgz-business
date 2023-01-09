@@ -20,13 +20,13 @@ public interface DriveService {
     public JSONObject getCongestionIndex();
 
     //平均速度
-    public JSONObject getAverageSpeed();
+    public JSONObject getAverageSpeed(String areaCode);
 
     // 在途车辆
-    public JSONObject getTransitnum();
+    public JSONObject getTransitnum(String areaCode);
 
     // 指数和速度排名
-    public JSONObject getRank();
+    public JSONObject getRank(String areaCode);
 
     // 流量排名
     public JSONArray getSectionFlow();

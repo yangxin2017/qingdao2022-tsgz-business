@@ -61,29 +61,29 @@ public class PanelRegionController {
     @GetMapping("getCongestionIndex")
     @ApiOperation(value = "获取拥堵指数", notes = "获取拥堵指数")
     @RequestLog(moduleName = "区域级数据面板",functionName = "获取拥堵指数")
-    public ResponseData<AcdFile> getCongestionIndex(){
+    public ResponseData<AcdFile> getCongestionIndex(String areaCode){
         return OK(driveService.getCongestionIndex());
     }
 
     @GetMapping("getAverageSpeed")
     @ApiOperation(value = "获取平均速度", notes = "获取平均速度")
     @RequestLog(moduleName = "区域级数据面板",functionName = "获取平均速度")
-    public ResponseData<AcdFile> getAverageSpeed(){
-        return OK(driveService.getAverageSpeed());
+    public ResponseData<AcdFile> getAverageSpeed(String areaCode){
+        return OK(driveService.getAverageSpeed(areaCode));
     }
 
     @GetMapping("getTransitnum")
     @ApiOperation(value = "获取在途车辆", notes = "获取在途车辆")
     @RequestLog(moduleName = "区域级数据面板",functionName = "获取在途车辆")
-    public ResponseData<AcdFile> getTransitnum(){
-        return OK(driveService.getTransitnum());
+    public ResponseData<AcdFile> getTransitnum(String areaCode){
+        return OK(driveService.getTransitnum(areaCode));
     }
 
     @GetMapping("getRank")
     @ApiOperation(value = "获取指数和速度排名", notes = "获取指数和速度排名")
     @RequestLog(moduleName = "区域级数据面板",functionName = "获取指数和速度排名")
-    public ResponseData<AcdFile> getRank(){
-        return OK(driveService.getRank());
+    public ResponseData<AcdFile> getRank(String areaCode){
+        return OK(driveService.getRank(areaCode));
     }
 
     @GetMapping("getSectionFlow")
@@ -97,7 +97,7 @@ public class PanelRegionController {
     @GetMapping("getSectionRank")
     @ApiOperation(value = "获取区域路段排名", notes = "获取区域路段排名")
     @RequestLog(moduleName = "区域级数据面板",functionName = "获取区域路段排名")
-    public ResponseData<AcdFile> getSectionRank(){
+    public ResponseData<AcdFile> getSectionRank(String areaCode){
         return OK(driveService.getSectionRank());
     }
 
@@ -106,7 +106,7 @@ public class PanelRegionController {
     @GetMapping("getRegionHead")
     @ApiOperation(value = "获取区域头部", notes = "获取区域头部")
     @RequestLog(moduleName = "区域级数据面板",functionName = "获取区域头部")
-    public ResponseData<AcdFile> getRegionHead(){
+    public ResponseData<AcdFile> getRegionHead(String areaCode){
         return OK(driveService.getRegionHead());
     }
 

@@ -90,45 +90,45 @@ public class DriveServiceImpl implements DriveService {
     }
 
     @Override
-    public JSONObject getAverageSpeed() {
+    public JSONObject getAverageSpeed(String areaCode) {
         JSONObject jsonObject = new JSONObject();
 
-        JSONArray data = getData("/data-server/indices/getSummaryRet", 0,"tsgz","area","speed",new JSONArray(),"1h",60,0,null);
+        JSONArray data = getData("/data-server/indices/getSummaryRet", 0,"tsgz","area","speed",new JSONArray(),"1h",60,0,null,areaCode);
         jsonObject.put("nowData", data);
 
-        data = getData("/data-server/indices/getSummaryRet", 7,"tsgz","area","speed",new JSONArray(),"1h",60,0,null);
+        data = getData("/data-server/indices/getSummaryRet", 7,"tsgz","area","speed",new JSONArray(),"1h",60,0,null,areaCode);
         jsonObject.put("lastData", data);
 
         return jsonObject;
     }
 
     @Override
-    public JSONObject getTransitnum() {
+    public JSONObject getTransitnum(String areaCode) {
         JSONObject jsonObject = new JSONObject();
 
-        JSONArray data = getData("/data-server/indices/getSummaryRet", 0,"tsgz","area","transitnum",new JSONArray(),"1h",60,0,null);
+        JSONArray data = getData("/data-server/indices/getSummaryRet", 0,"tsgz","area","transitnum",new JSONArray(),"1h",60,0,null,areaCode);
         jsonObject.put("nowData", data);
 
-        data = getData("/data-server/indices/getSummaryRet", 7,"tsgz","area","transitnum",new JSONArray(),"1h",60,0,null);
+        data = getData("/data-server/indices/getSummaryRet", 7,"tsgz","area","transitnum",new JSONArray(),"1h",60,0,null,areaCode);
         jsonObject.put("lastData", data);
 
         return jsonObject;
     }
 
     @Override
-    public JSONObject getRank() {
+    public JSONObject getRank(String areaCode) {
         JSONObject jsonObject = new JSONObject();
         JSONArray param = new JSONArray();
         param.add("tpi");
         param.add("areacode");
 
-        JSONArray data = getData("/data-server/indices/getIndices", 0,"tsgz","area","",param,"1h",60,0,"tpi");
+        JSONArray data = getData("/data-server/indices/getIndices", 0,"tsgz","area","",param,"1h",60,0,"tpi",areaCode);
         jsonObject.put("tpi", data);
 
         param.clear();
         param.add("speed");
         param.add("areacode");
-        data = getData("/data-server/indices/getIndices", 0,"tsgz","area","",param,"1h",60,0,"speed");
+        data = getData("/data-server/indices/getIndices", 0,"tsgz","area","",param,"1h",60,0,"speed",areaCode);
         jsonObject.put("speed", data);
 
         return jsonObject;
@@ -137,36 +137,43 @@ public class DriveServiceImpl implements DriveService {
     @Override
     public JSONArray getSectionFlow() {
         JSONArray param = new JSONArray();
+        JSONArray result = new JSONArray();
         param.add("flow");
         param.add("sectioncode");
 
-        JSONArray data = getData("/data-server/indices/getIndices", 1,"tsgz","section","",param,"",20,15,"flow");
-        ArrayList codeList = new ArrayList();
-        for(int i = 0; i < data.size(); i++){
-            JSONObject jsonObject = data.getJSONObject(i);
-            if(jsonObject.get("flow") == null){
-                continue;
+        try{
+            JSONArray data = getData("/data-server/indices/getIndices", 1,"tsgz","section","",param,"",20,15,"flow");
+            ArrayList codeList = new ArrayList();
+            for(int i = 0; i < data.size(); i++){
+                JSONObject jsonObject = data.getJSONObject(i);
+                if(jsonObject.get("flow") == null){
+                    continue;
+                }
+                codeList.add(data.getJSONObject(i).getString("sectioncode"));
             }
-            codeList.add(data.getJSONObject(i).getString("sectioncode"));
-        }
-        QueryWrapper<BisSection> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("section_code", codeList);
-        List<BisSection> bisSections = bisSectionService.list(queryWrapper);
-        JSONArray result = new JSONArray();
+            if(codeList.size() < 1){
+                return result;
+            }
+            QueryWrapper<BisSection> queryWrapper = new QueryWrapper<>();
+            queryWrapper.in("section_code", codeList);
+            List<BisSection> bisSections = bisSectionService.list(queryWrapper);
 
-        for (int i = 0; i < data.size(); i++) {
-            JSONObject jsonObject = data.getJSONObject(i);
-            // 判断flow是否为null
-            if(jsonObject.get("flow") == null){
-                continue;
-            }
-            for (BisSection bisSection : bisSections) {
-                if (bisSection.getSectionCode().equals(jsonObject.getString("sectioncode"))) {
-                    jsonObject.put("name", bisSection.getSectionName());
-                    result.add(jsonObject);
-                    break;
+            for (int i = 0; i < data.size(); i++) {
+                JSONObject jsonObject = data.getJSONObject(i);
+                // 判断flow是否为null
+                if(jsonObject.get("flow") == null){
+                    continue;
+                }
+                for (BisSection bisSection : bisSections) {
+                    if (bisSection.getSectionCode().equals(jsonObject.getString("sectioncode"))) {
+                        jsonObject.put("name", bisSection.getSectionName());
+                        result.add(jsonObject);
+                        break;
+                    }
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return result;
     }
@@ -346,6 +353,38 @@ public class DriveServiceImpl implements DriveService {
         }
         if(queryParams != null){
             params.put("queryParams", queryParams);
+        }
+        String result = HttpUtil.post(url, params.toJSONString());
+        JSONObject resultJson = JSONObject.parseObject(result);
+        JSONArray data = resultJson.getJSONArray("result");
+        return data;
+    }
+    public JSONArray getData(String url, Integer timeLast, String token, String geoDim, String measureColumn, JSONArray columns, String timeDim,int st,int et, String orderBy, String areaCode){
+        url = "http://10.16.7.14:8005" + url;
+        JSONObject params = new JSONObject();
+        params.put("token", token);
+        params.put("geoDim",geoDim);
+        if(timeDim != null){
+            params.put("timeDim",timeDim);
+        }
+        String starttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - timeLast * 24 * 60 * 60 * 1000 - st * 60 * 1000));
+        String endttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - timeLast * 24 * 60 * 60 * 1000 - et * 60 * 1000));
+        params.put("startTime", starttime);
+        params.put("endTime", endttime);
+        params.put("columns", columns);
+        params.put("measureColumn",measureColumn);
+        if (orderBy!=null){
+            params.put("orderBy", orderBy);
+        }
+        if(areaCode!=null){
+            JSONArray queryParams = new JSONArray();
+            queryParams.add(areaCode);
+            JSONObject queryParam = new JSONObject();
+            queryParam.put("field","areacode");
+            queryParam.put("values",queryParams);
+            JSONArray queryParamArray = new JSONArray();
+            queryParamArray.add(queryParam);
+            params.put("queryParams", queryParamArray);
         }
         String result = HttpUtil.post(url, params.toJSONString());
         JSONObject resultJson = JSONObject.parseObject(result);

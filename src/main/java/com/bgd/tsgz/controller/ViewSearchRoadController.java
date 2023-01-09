@@ -20,7 +20,7 @@ import static com.bgd.tsgz.common.ResponseData.OK;
 
 @RestController
 @RequestMapping("")
-@Api(value = "三合一搜索功能", tags = {"三合一搜索功能"})
+@Api(value = "搜索功能", tags = {"搜索功能"})
 public class ViewSearchRoadController {
     @Autowired
     private ViewIntersectionService viewIntersectionService;
@@ -34,10 +34,12 @@ public class ViewSearchRoadController {
     private BisAreaService bisAreaService;
     @Autowired
     private BisSectionService bisSectionService;
+    @Autowired
+    private CityClustersFeaturesService cityClustersFeaturesService;
 
     @GetMapping("getSearchRoadList")
     @ApiOperation(value = "获取搜索列表", notes = "获取搜索列表")
-    @RequestLog(moduleName = "三合一搜索功能",functionName = "获取搜索列表")
+    @RequestLog(moduleName = "搜索功能",functionName = "获取搜索列表")
     public ResponseData getSearchRoadList(String name) {
         if(name == null || name.equals("")){
             name = "";
@@ -141,4 +143,27 @@ public class ViewSearchRoadController {
         return OK(jsonArray);
 
     }
+
+    // 搜索城市群数据
+    @GetMapping("getSearchRegionList")
+    @ApiOperation(value = "获取搜索城市群列表", notes = "获取搜索城市群列表")
+    @RequestLog(moduleName = "搜索功能",functionName = "获取搜索城市群列表")
+    public ResponseData getSearchRegionList(String name) {
+        if(name == null || name.equals("")){
+            name = "";
+        }
+        JSONArray jsonArray = new JSONArray();
+
+        QueryWrapper<CityClustersFeatures> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", name);
+        for(CityClustersFeatures cityClustersFeatures : cityClustersFeaturesService.list(queryWrapper)){
+            JSONObject json = new JSONObject();
+            json.put("id", cityClustersFeatures.getId());
+            json.put("name", cityClustersFeatures.getName());
+            jsonArray.add(json);
+        }
+        return OK(jsonArray);
+    }
+
+
 }

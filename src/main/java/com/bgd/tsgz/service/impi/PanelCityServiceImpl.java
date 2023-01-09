@@ -49,7 +49,7 @@ public class PanelCityServiceImpl implements PanelCityService {
 
     // 获取24小时TPI数据
     @Override
-    public JSONObject getTpi24List(String type,String time) throws ParseException {
+    public JSONObject getTpi24List(String type,String time,String areaCode) throws ParseException {
         JSONObject jsonObject = new JSONObject();
 //        JSONArray data = getData("/data-server/indices/getPeriodMeasureRet", 0,"tsgz","city","tpi",new JSONArray(),null,true);
         String timeDim = null;
@@ -279,9 +279,14 @@ public class PanelCityServiceImpl implements PanelCityService {
 
     // 停车场
     @Override
-    public JSONObject getParkingList() {
+    public JSONObject getParkingList(String areaCode) {
         JSONObject result = new JSONObject();
         QueryWrapper<ComInfoTb> queryWrapper = new QueryWrapper<>();
+        if(areaCode != null && !areaCode.equals("")) {
+            // areaCode转为int
+            int areaCodeInt = Integer.parseInt(areaCode);
+            queryWrapper.eq("area_code", areaCodeInt);
+        }
         // 计算total列总和
         queryWrapper.select("sum(total) as total");
         ComInfoTb comInfoTb = comInfoTbService.getOne(queryWrapper);
@@ -372,6 +377,24 @@ public class PanelCityServiceImpl implements PanelCityService {
     }
 
     public JSONArray getData(String url, String starttime, String endttime, String token, String geoDim, String measureColumn, JSONArray columns, String timeDim, Boolean isAll){
+        url = "http://10.16.7.14:8005" + url;
+        JSONObject params = new JSONObject();
+        params.put("token", token);
+        params.put("geoDim",geoDim);
+        if(timeDim != null){
+            params.put("timeDim",timeDim);
+        }
+        params.put("startTime", starttime);
+        params.put("endTime", endttime);
+        params.put("columns", columns);
+        params.put("measureColumn",measureColumn);
+        String result = HttpUtil.post(url, params.toJSONString());
+        JSONObject resultJson = JSONObject.parseObject(result);
+        JSONArray data = resultJson.getJSONArray("result");
+        return data;
+    }
+
+    public JSONArray getData(String url, String starttime, String endttime, String token, String geoDim, String measureColumn, JSONArray columns, String timeDim, Boolean isAll,String areaCode){
         url = "http://10.16.7.14:8005" + url;
         JSONObject params = new JSONObject();
         params.put("token", token);

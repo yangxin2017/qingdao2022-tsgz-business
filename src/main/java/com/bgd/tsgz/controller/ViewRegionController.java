@@ -43,6 +43,7 @@ public class ViewRegionController {
             json.put("id", bisArea.getAreaCode());
             json.put("name", bisArea.getAreaName());
             json.put("threshold", 1);
+            json.put("areaId", bisArea.getAreaCode());
             JSONArray position = new JSONArray();
             // 将position以逗号分割，单位数为lng，双位数为lat，两个一组存入position
             String[] positionArray = bisArea.getCoordinate().split(",");

@@ -104,7 +104,7 @@ public class ComInfoTb {
     private String parkUuid;
     //    area_code
     @ApiModelProperty("areaCode")
-    private String areaCode;
+    private Integer areaCode;
     //    street_code
     @ApiModelProperty("streetCode")
     private String streetCode;

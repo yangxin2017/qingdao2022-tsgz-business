@@ -5,13 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.bgd.tsgz.aspect.RequestLog;
 import com.bgd.tsgz.common.ResponseData;
-import com.bgd.tsgz.entity.AcdFile;
-import com.bgd.tsgz.entity.CityClustersEvaluate;
-import com.bgd.tsgz.entity.CityEvaluate;
-import com.bgd.tsgz.entity.ProblemDiagnosis;
+import com.bgd.tsgz.entity.*;
 import com.bgd.tsgz.service.CityEvaluateService;
 import com.bgd.tsgz.service.PanelCityService;
 import com.bgd.tsgz.service.ProblemDiagnosisService;
+import com.bgd.tsgz.service.TravelSharingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +33,8 @@ public class PanelCityController {
     private CityEvaluateService cityEvaluateService;
     @Autowired
     private ProblemDiagnosisService problemDiagnosisService;
+    @Autowired
+    private TravelSharingService travelSharingService;
 
 
     @GetMapping("getTpiList")
@@ -48,8 +48,8 @@ public class PanelCityController {
     @GetMapping("getTpi24List")
     @ApiOperation(value = "交通指数/拥堵指数24小时", notes = "交通指数/拥堵指数24小时")
     @RequestLog(moduleName = "城市级数据面板",functionName = "获取交通指数/拥堵指数24小时")
-    public ResponseData<AcdFile> getTpi24List(String type,String time) throws ParseException {
-        JSONObject result = panelCityService.getTpi24List(type,time);
+    public ResponseData<AcdFile> getTpi24List(String type,String time,String areaCode) throws ParseException {
+        JSONObject result = panelCityService.getTpi24List(type,time,areaCode);
         return OK(result);
     }
 
@@ -112,8 +112,8 @@ public class PanelCityController {
     @GetMapping("getParkingList")
     @ApiOperation(value = "停车场", notes = "停车场")
     @RequestLog(moduleName = "城市级数据面板",functionName = "获取停车场数据")
-    public ResponseData<AcdFile> getParkingList(){
-        JSONObject result = panelCityService.getParkingList();
+    public ResponseData<AcdFile> getParkingList(String areaCode){
+        JSONObject result = panelCityService.getParkingList(areaCode);
         return OK(result);
     }
 
@@ -180,5 +180,32 @@ public class PanelCityController {
     public ResponseData getCityEvaluateProblemDiagnosis() {
         QueryWrapper<ProblemDiagnosis> queryWrapper = new QueryWrapper<>();
         return OK(problemDiagnosisService.list(queryWrapper));
+    }
+
+    @GetMapping("getSurfaceBus")
+    @ApiOperation(value = "地面公交", notes = "地面公交")
+    @RequestLog(moduleName = "城市级数据面板",functionName = "获取地面公交数据")
+    public ResponseData getSurfaceBus() {
+        QueryWrapper<TravelSharing> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","1");
+        return OK(travelSharingService.list(queryWrapper));
+    }
+
+    @GetMapping("getRailway")
+    @ApiOperation(value = "轨道交通", notes = "轨道交通")
+    @RequestLog(moduleName = "城市级数据面板",functionName = "获取轨道交通数据")
+    public ResponseData getRailway() {
+        QueryWrapper<TravelSharing> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","2");
+        return OK(travelSharingService.list(queryWrapper));
+    }
+
+    @GetMapping("getTaxi")
+    @ApiOperation(value = "出租车", notes = "出租车")
+    @RequestLog(moduleName = "城市级数据面板",functionName = "获取出租车数据")
+    public ResponseData getTaxi() {
+        QueryWrapper<TravelSharing> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type","3");
+        return OK(travelSharingService.list(queryWrapper));
     }
 }

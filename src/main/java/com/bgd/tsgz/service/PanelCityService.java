@@ -7,7 +7,7 @@ import java.text.ParseException;
 
 public interface PanelCityService {
     public JSONObject getTpiList();
-    public JSONObject getTpi24List(String type,String time) throws ParseException;
+    public JSONObject getTpi24List(String type,String time,String areaCode) throws ParseException;
 
     // 获取平均速度
     public JSONObject getAvgSpeedList();
@@ -31,7 +31,7 @@ public interface PanelCityService {
     public JSONArray getFocusRoadRanking();
 
     //  停车场
-    public JSONObject getParkingList();
+    public JSONObject getParkingList(String areaCode);
 
     // 城市概况
     public JSONArray getCityOverview();
