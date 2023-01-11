@@ -32,8 +32,8 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
         JSONObject params = new JSONObject();
         params.put("token", "tsgz");
         params.put("geoDim","section");
-        String starttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 20 * 60 * 1000 - 3*24*60*60*1000));
-        String endttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 15 * 60 * 1000 - 3*24*60*60*1000));
+        String starttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 20 * 60 * 1000 - 7*24*60*60*1000));
+        String endttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 15 * 60 * 1000 - 7*24*60*60*1000));
         params.put("startTime", starttime);
         params.put("endTime", endttime);
         JSONArray columns = new JSONArray();
