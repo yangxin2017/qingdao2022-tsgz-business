@@ -32,8 +32,8 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
         JSONObject params = new JSONObject();
         params.put("token", "tsgz");
         params.put("geoDim","section");
-        String starttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 20 * 60 * 1000 - 7*24*60*60*1000));
-        String endttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 15 * 60 * 1000 - 7*24*60*60*1000));
+        String starttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 20 * 60 * 1000));
+        String endttime = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(System.currentTimeMillis() - 15 * 60 * 1000));
         params.put("startTime", starttime);
         params.put("endTime", endttime);
         JSONArray columns = new JSONArray();
@@ -76,20 +76,21 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
                     String sectioncode = item.getString("sectioncode");
                     if(item.getString("tpibynet")!=null){
                         if(bisSection.getSectionCode().equals(sectioncode)){
-                            for (int j=0;j<position.size()-1;j++) {
+//                            for (int j=0;j<position.size()-1;j++) {
                                 JSONObject json = new JSONObject();
                                 JSONArray arr = new JSONArray();
-                                arr.add(position.getJSONObject(j));
-                                arr.add(position.getJSONObject(j + 1));
+//                                arr.add(position.getJSONObject(j));
+//                                arr.add(position.getJSONObject(j + 1));
 
                                 json.put("name", bisSection.getSectionName());
-                                json.put("gis", arr);
+//                                json.put("gis", arr);
+                                json.put("gis", position);
                                 json.put("value", item.getString("tpibynet"));
                                 json.put("id", bisSection.getSectionCode());
                                 json.put("width", bisSection.getWidth());
 //                                json.put("height",0);
                                 list.add(json);
-                            }
+//                            }
                             isFindRoad = true;
                             break;
                         }
