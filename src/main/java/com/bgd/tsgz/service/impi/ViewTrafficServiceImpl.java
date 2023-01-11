@@ -93,24 +93,24 @@ public class ViewTrafficServiceImpl extends ServiceImpl<ViewTrafficMapper, ViewT
     }
 
     private boolean isImpRoad(String roadCode, List<BisRoad> allRoads) {
-        List<Integer> impTypes = new ArrayList<>();
-        impTypes.add(1);
-        impTypes.add(2);
-        impTypes.add(3);
-        impTypes.add(4);
-        impTypes.add(8);
-        impTypes.add(9);
-
-        boolean isImp = false;
-        for(BisRoad road: allRoads) {
-            if (road.getRoadCode().equals(roadCode)) {
-                if (impTypes.contains(road.getRoadType())) {
-                    isImp = true;
-                    break;
-                }
-            }
-        }
-//        return isImp;
         return true;
+//        List<Integer> impTypes = new ArrayList<>();
+//        impTypes.add(1);
+//        impTypes.add(2);
+//        impTypes.add(3);
+//        impTypes.add(4);
+//        impTypes.add(8);
+//        impTypes.add(9);
+//
+//        boolean isImp = false;
+//        for(BisRoad road: allRoads) {
+//            if (road.getRoadCode().equals(roadCode)) {
+//                if (impTypes.contains(road.getRoadType())) {
+//                    isImp = true;
+//                    break;
+//                }
+//            }
+//        }
+//        return isImp;
     }
 }
